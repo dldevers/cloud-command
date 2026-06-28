@@ -1,10 +1,10 @@
 # CloudPortal
 
-CloudPortal is the provider-independent operations platform for the LaCasa infrastructure project.
+CloudPortal is a provider-independent operations platform for managing workloads across on-premises and cloud infrastructure.
 
 Its purpose is to provide a consistent operational interface for deploying and managing workloads across multiple infrastructure providers while hiding provider-specific implementation details behind standardized Resource Classes.
 
-CloudPortal operates LaCasa.
+CloudPortal provides a consistent operational layer across infrastructure providers.
 
 ## Core Principle
 
@@ -57,7 +57,7 @@ CloudPortal will contain:
 - A user-facing operations interface
 - State and observability for managed resources
 
-The first implementation provider will use the LaCasa Kubernetes environment, but Kubernetes is an implementation detail rather than the CloudPortal product model.
+The first implementation provider will target an on-premises Kubernetes cluster, but Kubernetes is an implementation detail rather than the CloudPortal product model.
 
 ## Project Status
 
