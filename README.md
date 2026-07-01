@@ -3,6 +3,7 @@
 > **Provider-independent control plane for hybrid multi-cloud environments.**
 
 Applications request capacity. Providers satisfy that request.
+![CloudCommand architecture diagram](docs/images/![CloudCommand architecture diagram](docs/images/cloudcommand-operational-model.png))
 
 ---
 
