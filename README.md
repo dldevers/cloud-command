@@ -1,35 +1,80 @@
-# CloudPortal
+# CloudCommand
 
-## Manage your entire cloud, not just a single provider.
+> **Provider-independent control plane for hybrid multi-cloud environments.**
 
-CloudPortal is a provider-independent cloud operations platform.
+Applications request capacity. Providers satisfy that request.
 
-Whether your cloud is composed of:
+---
+
+## Overview
+
+CloudCommand provides a unified operational model for managing applications across hybrid and multi-cloud environments.
+
+Rather than exposing infrastructure, CloudCommand abstracts infrastructure providers behind standardized Resource Classes, allowing applications to request capacity without needing to understand how or where that capacity is implemented.
+
+Whether capacity comes from:
 
 - Kubernetes
-- Amazon Web Services (AWS)
-- Microsoft Azure
-- Google Cloud Platform (GCP)
-- Proxmox
-- VMware
 - Bare metal
-- Existing, refurbished, surplus, or commodity hardware
-- Or any combination of the above
+- Virtual machines
+- Amazon EKS
+- Azure AKS
+- Google GKE
+- Future providers
 
-CloudPortal provides a single operational interface for understanding, operating, and growing your cloud.
+Applications interact with the same operational model.
 
-> **Infrastructure should be described by capability, not implementation.**
+---
 
-## Operational Model
+## Philosophy
 
-![CloudPortal operational model showing how Services run on Clouds, Clouds contain Providers, Providers contribute Resource Units, and Services request and consume Resource Units.](docs/images/cloudportal-operational-model.png)
+Infrastructure is an implementation detail.
 
-## Core Model
+Applications should request capacity—not hardware.
 
-CloudPortal is built around a service-first operational model:
+Providers satisfy those requests using the infrastructure best suited for the environment.
 
-- **Services** are the applications and operational workloads you intend to run on your Cloud.
-- **Clouds** are the logical environments in which Services run.
-- **Providers** supply capacity to a Cloud.
-- **Resource Units** describe both the capacity Providers make available and the capacity Services request and consume.
-- **Provider extensions** expose implementation-specific details only when an operator chooses to drill deeper.
+This separation allows workloads to move seamlessly between on-premises infrastructure and public cloud providers without changing the application model.
+
+---
+
+## Core Concepts
+
+### Provider Independence
+
+CloudCommand is designed to operate across heterogeneous infrastructure providers through a common abstraction layer.
+
+### Resource Classes
+
+Resource Classes define the capacity an application requires.
+
+Providers implement Resource Classes using whatever infrastructure they manage.
+
+### Operational Control Plane
+
+CloudCommand provides a single operational interface for deploying, managing, scaling, and operating workloads regardless of where they execute.
+
+---
+
+## Goals
+
+- Provider independence
+- Hybrid cloud operations
+- Multi-cloud orchestration
+- Infrastructure abstraction
+- Standardized operational workflows
+- Resource-class driven architecture
+
+---
+
+## Status
+
+CloudCommand is currently under active development as a proof-of-concept platform demonstrating provider-independent operations for hybrid and multi-cloud environments.
+
+The initial implementation is being developed against the LaCasa on-prem Kubernetes environment and will expand to additional providers over time.
+
+---
+
+## License
+
+Apache-2.0
