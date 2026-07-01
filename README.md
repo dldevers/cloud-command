@@ -3,12 +3,10 @@
 > **Provider-independent control plane for hybrid multi-cloud environments.**
 
 Applications request capacity. Providers satisfy that request.
-![CloudCommand architecture diagram](docs/images/![CloudCommand architecture diagram](docs/images/cloudcommand-operational-model.png))
+
+![CloudCommand architecture diagram](docs/images/cloudcommand-architecture.png)
 
 ---
-
-## Overview
-
 CloudCommand provides a unified operational model for managing applications across hybrid and multi-cloud environments.
 
 Rather than exposing infrastructure, CloudCommand abstracts infrastructure providers behind standardized Resource Classes, allowing applications to request capacity without needing to understand how or where that capacity is implemented.
