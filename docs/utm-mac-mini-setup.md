@@ -1,72 +1,3 @@
-# CloudCommand
-
-**Provider-independent control plane for hybrid multi-cloud environments.**
-
-> Applications request capacity. Providers satisfy that request.
-
-CloudCommand is a provider-independent operations platform for deploying and managing workloads across on-premises and cloud infrastructure.
-
-It provides a consistent operational interface while keeping infrastructure-specific implementation details behind standardized provider and resource abstractions.
-
-CloudCommand manages the cloud as a service platform—not as a collection of individual machines.
-
-## Project Philosophy
-
-Cloud computing was never intended to expose infrastructure.
-
-It was intended to provide capacity without requiring application teams to understand or manage the underlying implementation.
-
-Applications should request **capacity**, not hardware.
-
-Applications should not need to care whether that capacity is implemented using:
-
-- Kubernetes
-- Virtual machines
-- Bare metal
-- Amazon Web Services
-- Microsoft Azure
-- Google Cloud Platform
-- Proxmox
-- VMware
-- Future infrastructure providers
-
-Those implementation details belong to the provider layer.
-
-CloudCommand exists to preserve that abstraction.
-
-## Operational Model
-
-![CloudCommand operational model showing how services run on clouds, clouds contain providers, providers contribute resource units, and services request and consume resource units.](docs/images/cloudportal-operational-model.png)
-
-CloudCommand uses a provider-independent resource model:
-
-- **Services** request capacity.
-- **Clouds** provide an operational boundary.
-- **Providers** contribute infrastructure capabilities.
-- **Resource Units** describe the capacity available to services.
-
-A cloud may contain one provider or many providers.
-
-For example, a single CloudCommand environment could combine:
-
-- An on-premises Kubernetes cluster
-- Bare-metal compute nodes
-- Amazon EKS
-- Azure Kubernetes Service
-- Google Kubernetes Engine
-- Virtual-machine infrastructure
-- Additional future providers
-
-The application-facing resource model remains consistent regardless of how the underlying capacity is implemented.
-
-## Resource Model
-
-The Resource Model is the foundation of CloudCommand.
-
-Applications request standardized **Resource Classes**.
-
-Providers satisfy those requests.
-````markdown
 # Create Your Own Kubernetes Cloud Provider on a Base-Model M4 Mac Mini
 
 This guide walks through building a three-node Kubernetes cluster on a base-model Apple M4 Mac Mini using UTM and Ubuntu Server.
@@ -1342,4 +1273,3 @@ The Kubernetes cluster is the implementation layer.
 CloudCommand provides the operational abstraction above it.
 
 Applications request capacity. Providers satisfy that request.
-````
