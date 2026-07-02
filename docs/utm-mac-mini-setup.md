@@ -1,645 +1,184 @@
-UTM Virtual Machine Setup on a Base-Model M4 Mac Mini
+# CloudCommand
 
-This guide documents the virtual-machine environment used to build and test the initial CloudCommand Kubernetes prototype.
+**Provider-independent control plane for hybrid multi-cloud environments.**
 
-The environment consists of three Ubuntu Server virtual machines running in UTM on a base-model M4 Mac mini:
+> Applications request capacity. Providers satisfy that request.
 
-* One Kubernetes control-plane node
-* Two Kubernetes worker nodes
+CloudCommand is a provider-independent operations platform for deploying and managing workloads across on-premises and cloud infrastructure.
 
-The objective is to create a small, reproducible infrastructure environment for Kubernetes development, cluster automation, and CloudCommand integration testing.
+It provides a consistent operational interface while keeping infrastructure-specific implementation details behind standardized provider and resource abstractions.
 
-⸻
+CloudCommand manages the cloud as a service platform—not as a collection of individual machines.
 
-Environment Overview
+## Project Philosophy
 
-Component	Role
-Base-model M4 Mac mini	Physical development host
-UTM	Local virtualization platform
-Ubuntu Server ARM64	Guest operating system
-k8s-cp1	Kubernetes control-plane node
-k8s-worker1	Kubernetes worker node
-k8s-worker2	Kubernetes worker node
+Cloud computing was never intended to expose infrastructure.
 
-This environment is intended for development, testing, and proof-of-concept workloads rather than production use.
+It was intended to provide capacity without requiring application teams to understand or manage the underlying implementation.
 
-⸻
+Applications should request **capacity**, not hardware.
 
-Host Hardware Verification
+Applications should not need to care whether that capacity is implemented using:
 
-Before creating the virtual machines, verify the hardware resources available on the M4 Mac mini.
+- Kubernetes
+- Virtual machines
+- Bare metal
+- Amazon Web Services
+- Microsoft Azure
+- Google Cloud Platform
+- Proxmox
+- VMware
+- Future infrastructure providers
 
-Display Physical and Logical CPU Cores
+Those implementation details belong to the provider layer.
 
-sysctl hw.physicalcpu hw.logicalcpu
+CloudCommand exists to preserve that abstraction.
 
-Display a Sanitized Hardware Summary
+## Operational Model
 
-The following command displays the relevant host information without exposing the serial number, hardware UUID, or provisioning identifiers:
+![CloudCommand operational model showing how services run on clouds, clouds contain providers, providers contribute resource units, and services request and consume resource units.](docs/images/cloudportal-operational-model.png)
 
-system_profiler SPHardwareDataType | grep -E \
-"Model Name|Model Identifier|Chip|Total Number of Cores|Memory"
+CloudCommand uses a provider-independent resource model:
 
-Example output:
+- **Services** request capacity.
+- **Clouds** provide an operational boundary.
+- **Providers** contribute infrastructure capabilities.
+- **Resource Units** describe the capacity available to services.
 
-Model Name: Mac mini
-Model Identifier: Mac16,10
-Chip: Apple M4
-Total Number of Cores: 10
-Memory: 16 GB
+A cloud may contain one provider or many providers.
 
-Do not publish the complete output of system_profiler SPHardwareDataType without filtering it. The complete report may include unique hardware identifiers.
+For example, a single CloudCommand environment could combine:
 
-⸻
+- An on-premises Kubernetes cluster
+- Bare-metal compute nodes
+- Amazon EKS
+- Azure Kubernetes Service
+- Google Kubernetes Engine
+- Virtual-machine infrastructure
+- Additional future providers
 
-Install UTM
+The application-facing resource model remains consistent regardless of how the underlying capacity is implemented.
 
-Download UTM from the official UTM website:
+## Resource Model
 
-* Download UTM from the official website
+The Resource Model is the foundation of CloudCommand.
 
-The website version is free and provides the functionality required for this environment.
+Applications request standardized **Resource Classes**.
 
-The Mac App Store release is not required for this guide.
+Providers satisfy those requests.
 
-After downloading UTM:
+Hardware is only one possible implementation.
 
-1. Open the downloaded disk image.
-2. Drag UTM into the macOS Applications folder.
-3. Start UTM.
-4. Approve any macOS security prompts.
-5. Confirm that UTM opens successfully.
+### Compute Resources
 
-The M4 Mac mini uses Apple silicon. Use an ARM64 guest operating system and select virtualization rather than emulation.
+- `C1`
+- `C2`
+- `C3`
 
-Virtualization allows the ARM64 guest to run directly on the Mac’s ARM-based processor and provides substantially better performance than CPU emulation.
+### Storage Resources
 
-⸻
+- `S1`
+- `S2`
+- `S3`
 
-Download Ubuntu Server for ARM
+### Network Resources
 
-This environment uses Ubuntu Server ARM64.
+- `N1`
+- `N2`
+- `N3`
 
-Ubuntu Server was selected because:
+Resource Classes describe capabilities and service expectations rather than specific hardware models.
 
-* It works reliably in UTM on the M4 Mac mini.
-* It provides an official ARM64 installation image.
-* It is widely supported by Kubernetes documentation and tooling.
-* It has predictable package management.
-* Long-term support releases receive extended security and maintenance updates.
-* Using one known operating system makes the build easier to reproduce.
+This allows the underlying provider implementation to change without requiring the application model to change.
 
-Download Ubuntu Server for ARM from the official Ubuntu website:
+## Provider Model
 
-* Download Ubuntu Server for ARM
+Providers make infrastructure capacity available to CloudCommand.
 
-Use the following image type:
+A provider may represent:
 
-Ubuntu Server LTS
-64-bit ARM / ARM64
+- An on-premises Kubernetes cluster
+- A managed Kubernetes service
+- A bare-metal environment
+- A virtual-machine platform
+- A public-cloud account
+- A specialized storage or network service
+- A future infrastructure implementation
 
-For this environment, use:
+Kubernetes is the first reference provider, but Kubernetes is not the CloudCommand product model.
 
-Ubuntu Server 24.04 LTS ARM64
+It is one implementation of the provider interface.
 
-Download the standard ARM64 server installation ISO.
+## Kubernetes Reference Provider
 
-The filename should resemble:
+The first CloudCommand provider targets an on-premises Kubernetes cluster.
 
-ubuntu-24.04.x-live-server-arm64.iso
+This provider serves as:
 
-The exact maintenance version represented by x may change as Ubuntu publishes updates.
+- A working reference implementation
+- A reproducible infrastructure environment
+- A platform for testing CloudCommand functionality
+- A practical demonstration of provider-independent operations
+- A foundation for future provider integrations
 
-Do not download the AMD64 or x86-64 image. The M4 Mac mini uses the ARM64 architecture for native virtualization.
+The Kubernetes environment is built from commodity hardware and virtual machines, making it accessible to engineers who want to reproduce the architecture without purchasing enterprise infrastructure.
 
-Store the ISO somewhere that will remain available until all three virtual machines have been installed.
+## Build Your Own Kubernetes Provider
 
-A suitable location is:
+You can reproduce the initial Kubernetes provider using a base-model Apple M4 Mac Mini and UTM virtual machines.
 
-~/Downloads/ubuntu-24.04-live-server-arm64.iso
+[Create Your Own Kubernetes Cloud Provider on a Base-Model M4 Mac Mini](docs/utm-mac-mini-setup.md)
 
-The exact filename may differ depending on the current Ubuntu maintenance release.
+The guide covers the initial virtual-machine environment, Kubernetes control-plane and worker-node configuration, networking, and the process for preparing the cluster as a CloudCommand provider.
 
-⸻
+## Current Status
 
-Virtual Machine Resource Plan
+CloudCommand is under active development.
 
-The resource allocation must leave enough CPU and memory available for macOS, UTM, terminal sessions, and CloudCommand development.
+Current work includes:
 
-A practical configuration for a base-model M4 Mac mini is:
+- Defining the provider-independent resource model
+- Building the Kubernetes reference provider
+- Creating reproducible infrastructure documentation
+- Developing operational workflows and runbooks
+- Designing provider registration and discovery
+- Establishing service-to-resource mapping
+- Building the CloudCommand operational interface
 
-Virtual Machine	CPU Cores	Memory	Storage
-k8s-cp1	2	4 GB	30 GB
-k8s-worker1	2	3 GB	30 GB
-k8s-worker2	2	3 GB	30 GB
+## Design Principles
 
-This allocation uses approximately 10 GB of guest memory while leaving the remaining host memory available to macOS and development tools.
+CloudCommand is being developed around several core principles:
 
-Avoid assigning all available host memory to the virtual machines. Excessive host memory pressure can make macOS and the entire VM environment unstable or unresponsive.
+### Provider Independence
 
-⸻
+Applications interact with standardized resources rather than provider-specific infrastructure.
 
-Create the Control-Plane Virtual Machine
+### Reproducibility
 
-Open UTM and select the option to create a new virtual machine.
+Infrastructure should be documented, version-controlled, and rebuildable from known components.
 
-1. Select Virtualization
+### Operational Clarity
 
-Choose:
+System state, capacity, health, and operational actions should be visible through a consistent interface.
 
-Virtualize
+### Commodity Accessibility
 
-Do not choose emulation.
+A functional provider should be reproducible using widely available commodity hardware.
 
-The M4 Mac mini and the Ubuntu guest both use the ARM64 architecture, so emulation is unnecessary.
+### Automation with Human Authority
 
-2. Select Linux
+CloudCommand should automate repeatable operational work while keeping important infrastructure decisions visible and controllable.
 
-Choose:
+### Extensibility
 
-Linux
+New infrastructure providers should be able to integrate without changing the application-facing resource model.
 
-as the guest operating-system type.
+## Repository Structure
 
-3. Select the Ubuntu ISO
-
-Select the Ubuntu Server ARM64 ISO downloaded earlier.
-
-Confirm that the selected filename includes:
-
-arm64
-
-4. Configure Hardware
-
-Assign the following resources to the control-plane node:
-
-CPU cores: 2
-Memory:    4096 MB
-Storage:   30 GB
-
-5. Configure Networking
-
-Use UTM shared networking for the initial environment.
-
-Shared networking should provide:
-
-* Internet access from the virtual machines
-* Ubuntu package installation
-* Communication between the Mac and the guests
-* Communication among the guest virtual machines
-* SSH access from the M4 Mac mini
-
-The guest IP addresses may change unless static addresses or DHCP reservations are configured later.
-
-6. Name the Virtual Machine
-
-Use:
-
-k8s-cp1
-
-Save the virtual machine.
-
-⸻
-
-Install Ubuntu Server on the Control-Plane Node
-
-Start k8s-cp1 and complete the Ubuntu Server installation.
-
-During installation:
-
-* Select the preferred language.
-* Select the appropriate keyboard layout.
-* Use the standard Ubuntu Server installation.
-* Allow the VM to use DHCP during the initial installation.
-* Use the entire virtual disk.
-* Create the administrative user.
-* Set the hostname to k8s-cp1.
-* Enable the OpenSSH server.
-* Do not install unnecessary server snaps or optional packages.
-* Record the username and authentication credentials securely.
-
-When prompted for a server name, enter:
-
-k8s-cp1
-
-When the installer offers to install OpenSSH, select:
-
-Install OpenSSH server
-
-After installation completes:
-
-1. Reboot the virtual machine.
-2. Stop the VM if it returns to the installer.
-3. Detach the Ubuntu installation ISO if UTM does not remove it automatically.
-4. Start the VM again.
-5. Confirm that Ubuntu boots from the virtual disk.
-
-⸻
-
-Create the First Worker Node
-
-Create another Ubuntu Server ARM64 virtual machine in UTM.
-
-Use the following configuration:
-
-Name:       k8s-worker1
-CPU cores:  2
-Memory:     3072 MB
-Storage:    30 GB
-Hostname:   k8s-worker1
-
-Use the same Ubuntu Server ARM64 ISO and the same general installation options used for the control-plane node.
-
-During the Ubuntu installation:
-
-* Set the hostname to k8s-worker1.
-* Create the same administrative username when practical.
-* Enable OpenSSH server.
-* Use the entire virtual disk.
-* Avoid unnecessary optional packages.
-
-After installation:
-
-1. Reboot the virtual machine.
-2. Detach the Ubuntu installation ISO.
-3. Confirm that the VM boots from its virtual disk.
-
-⸻
-
-Create the Second Worker Node
-
-Create the third Ubuntu Server ARM64 virtual machine.
-
-Use:
-
-Name:       k8s-worker2
-CPU cores:  2
-Memory:     3072 MB
-Storage:    30 GB
-Hostname:   k8s-worker2
-
-Use the same Ubuntu Server version and installation options used for the other two nodes.
-
-During installation:
-
-* Set the hostname to k8s-worker2.
-* Create the administrative user.
-* Enable OpenSSH server.
-* Use the entire virtual disk.
-* Avoid unnecessary optional packages.
-
-After installation:
-
-1. Reboot the virtual machine.
-2. Detach the Ubuntu installation ISO.
-3. Confirm that Ubuntu boots normally.
-
-⸻
-
-Verify the UTM Environment
-
-Start all three virtual machines.
-
-The UTM interface should display:
-
-k8s-cp1
-k8s-worker1
-k8s-worker2
-
-Capture a screenshot showing all three virtual machines in UTM.
-
-Suggested screenshot path:
-
-docs/screenshots/utm-three-node-environment.png
-
-Embed the screenshot in this document with:
-
-![Three-node Kubernetes environment running in UTM](screenshots/utm-three-node-environment.png)
-
-⸻
-
-Verify Ubuntu and the Hostnames
-
-Run the following command inside each virtual machine:
-
-hostnamectl
-
-Expected hostnames:
-
-k8s-cp1
-k8s-worker1
-k8s-worker2
-
-A shorter hostname check is:
-
-hostname
-
-Verify the Ubuntu release:
-
-lsb_release -a
-
-Alternatively:
-
-cat /etc/os-release
-
-The output should identify the system as Ubuntu Server 24.04 LTS or the selected Ubuntu 24.04 maintenance release.
-
-⸻
-
-Verify the Guest Architecture
-
-Run:
-
-uname -m
-
-Expected output:
-
-aarch64
-
-The value aarch64 identifies the running system as 64-bit ARM.
-
-You can also inspect the package architecture:
-
-dpkg --print-architecture
-
-Expected output:
-
-arm64
-
-⸻
-
-Verify CPU Resources
-
-Inside each virtual machine, run:
-
-lscpu
-
-Confirm that the guest operating system can see the CPU cores assigned through UTM.
-
-For a compact result:
-
-nproc
-
-Expected result for this configuration:
-
-2
-
-⸻
-
-Verify Memory
-
-Run:
-
-free -h
-
-The control-plane node should report approximately 4 GB of memory.
-
-Each worker node should report approximately 3 GB of memory.
-
-Some memory is reserved or used by the operating system, so the displayed total may be slightly lower than the amount configured in UTM.
-
-⸻
-
-Verify Storage
-
-Display the guest block devices:
-
-lsblk
-
-Display root-filesystem usage:
-
-df -h /
-
-Confirm that the root filesystem has sufficient free space for:
-
-* Ubuntu packages
-* Container images
-* Kubernetes components
-* Logs
-* Application workloads
-
-⸻
-
-Identify the Virtual Machine IP Addresses
-
-Inside each VM, run:
-
-hostname -I
-
-For detailed interface information:
-
-ip addr
-
-Record the address assigned to each node.
-
-Example:
-
-Hostname	IP Address
-k8s-cp1	192.168.64.4
-k8s-worker1	192.168.64.5
-k8s-worker2	192.168.64.6
-
-These addresses are examples only. UTM may assign different addresses.
-
-⸻
-
-Verify Network Connectivity
-
-From each worker node, test connectivity to the control-plane node:
-
-ping -c 4 <CONTROL_PLANE_IP>
-
-Example:
-
-ping -c 4 192.168.64.4
-
-From the control-plane node, test both workers:
-
-ping -c 4 <WORKER_1_IP>
-ping -c 4 <WORKER_2_IP>
-
-⸻
-
-Verify Internet Connectivity
-
-Test outbound IP connectivity:
-
-ping -c 4 1.1.1.1
-
-Verify DNS resolution:
-
-ping -c 4 ubuntu.com
-
-Both tests should succeed before continuing with Kubernetes installation.
-
-⸻
-
-Verify SSH Access from the M4 Mac Mini
-
-From the macOS terminal, connect to each virtual machine:
-
-ssh <USERNAME>@<VM_IP>
-
-Example:
-
-ssh dave@192.168.64.4
-
-Repeat the test for both worker nodes.
-
-Successful SSH access confirms that:
-
-* The virtual machine is reachable.
-* OpenSSH is running.
-* The user account is valid.
-* Authentication works.
-* The guest network is functioning.
-
-⸻
-
-Optional SSH Configuration
-
-To simplify access, create SSH aliases on the M4 Mac mini.
-
-Open the SSH configuration file:
-
-nano ~/.ssh/config
-
-Add entries similar to:
-
-Host k8s-cp1
-    HostName 192.168.64.4
-    User dave
-Host k8s-worker1
-    HostName 192.168.64.5
-    User dave
-Host k8s-worker2
-    HostName 192.168.64.6
-    User dave
-
-Save the file.
-
-The nodes can then be accessed with:
-
-ssh k8s-cp1
-ssh k8s-worker1
-ssh k8s-worker2
-
-If UTM assigns new IP addresses after a restart, update the SSH configuration accordingly.
-
-⸻
-
-Update Ubuntu
-
-Run the following commands on all three nodes:
-
-sudo apt update
-sudo apt upgrade -y
-
-Remove packages that are no longer required:
-
-sudo apt autoremove -y
-
-Reboot if required:
-
-sudo reboot
-
-After the reboot, reconnect to each machine and confirm that it is available.
-
-⸻
-
-Recommended Screenshot Checklist
-
-Capture screenshots that demonstrate the environment without exposing sensitive information.
-
-Recommended screenshots:
-
-* Sanitized M4 Mac mini hardware summary
-* UTM displaying all three VMs
-* Control-plane VM resource allocation
-* Worker VM resource allocation
-* Ubuntu version verification
-* ARM64 architecture verification
-* Successful hostname verification
-* Successful CPU and memory verification
-* IP addresses assigned to all nodes
-* Successful inter-node connectivity
-* Successful SSH connection from the Mac
-
-Store the images under:
-
-docs/screenshots/
-
-Use descriptive filenames such as:
-
-m4-mac-mini-hardware-summary.png
-utm-three-node-environment.png
-k8s-cp1-resources.png
-k8s-worker1-resources.png
-k8s-worker2-resources.png
-ubuntu-version-verification.png
-arm64-architecture-verification.png
-node-network-verification.png
-ssh-access-verification.png
-
-⸻
-
-Final Validation Checklist
-
-Before beginning the Kubernetes installation, confirm:
-
-* UTM was downloaded from the official UTM website
-* UTM is installed and working
-* Ubuntu Server 24.04 LTS ARM64 is installed on all three VMs
-* Each node reports the aarch64 or arm64 architecture
-* The control-plane hostname is k8s-cp1
-* The worker hostnames are k8s-worker1 and k8s-worker2
-* Each VM has two virtual CPU cores
-* The control-plane node has approximately 4 GB of memory
-* Each worker node has approximately 3 GB of memory
-* Each VM has sufficient virtual-disk space
-* All three VMs have valid IP addresses
-* The nodes can communicate with one another
-* Each VM has outbound internet access
-* DNS resolution works
-* SSH access works from the M4 Mac mini
-* Ubuntu package updates have been installed
-* Screenshots do not expose serial numbers or unique identifiers
-
-⸻
-
-Result
-
-The base-model M4 Mac mini now hosts a three-node Ubuntu Server ARM64 environment:
-
-k8s-cp1       Kubernetes control-plane node
-k8s-worker1   Kubernetes worker node
-k8s-worker2   Kubernetes worker node
-
-This virtual infrastructure is ready for:
-
-* Ubuntu prerequisite configuration
-* Container runtime installation
-* Kubernetes package installation
-* Control-plane initialization
-* Worker-node enrollment
-* Cluster validation
-* CloudCommand integration testing
-* Cluster lifecycle automation
-
-⸻
-
-Next Step
-
-Continue with:
-
-docs/kubernetes-prerequisites.md
-
-The next document will cover:
-
-* Disabling swap
-* Loading the required kernel modules
-* Configuring network forwarding
-* Installing and configuring containerd
-* Adding the Kubernetes package repository
-* Installing Kubernetes node components
-* Validating each prepared node
+```text
+.
+├── docs/
+│   ├── images/
+│   └── utm-mac-mini-setup.md
+├── README.md
+└── LICENSE
