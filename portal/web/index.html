@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CloudPortal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">CloudPortal</p>
+        <h1>Cluster Overview</h1>
+        <p class="subtitle">
+          Live operational status from the LaCasa Kubernetes provider.
+        </p>
+      </div>
+
+      <button id="refresh-button" type="button">
+        Refresh
+      </button>
+    </header>
+
+    <section id="status-panel" class="status-panel">
+      <div>
+        <span class="label">Cluster status</span>
+        <strong id="cluster-status">Loading…</strong>
+      </div>
+
+      <div>
+        <span class="label">Nodes ready</span>
+        <strong id="node-summary">—</strong>
+      </div>
+
+      <div>
+        <span class="label">Last updated</span>
+        <strong id="last-updated">—</strong>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-heading">
+        <h2>Nodes</h2>
+        <p>Control-plane and worker capacity currently registered.</p>
+      </div>
+
+      <div id="error-message" class="error-message" hidden></div>
+      <div id="nodes-grid" class="nodes-grid"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
