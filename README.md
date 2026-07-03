@@ -1,3 +1,8 @@
+<p align="center">
+  <img src="docs/assets/cloudcommand-logo.png"
+       alt="CloudCommand"
+       width="800">
+</p>
 # CloudCommand
 
 **A provider-independent operations platform for deploying and managing workloads across heterogeneous infrastructure.**
