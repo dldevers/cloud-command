@@ -5,6 +5,19 @@
 </p>
 
 # CloudCommand
+## Screenshots
+
+### Resource Providers
+
+![CloudCommand resource providers dashboard](docs/assets/screenshots/resource-providers-dashboard.png)
+
+### Kubernetes Provider Registration
+
+![CloudCommand Kubernetes provider registration workflow](docs/assets/screenshots/provider-registration-wizard.png)
+
+### Provider Discovery
+
+![CloudCommand provider discovery results](docs/assets/screenshots/provider-discovery-results.png)
 
 **A provider-independent operations platform for deploying and managing workloads across heterogeneous infrastructure.**
 
