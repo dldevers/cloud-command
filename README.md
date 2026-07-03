@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/cloudcommand-logo.png"
+  <img src="docs/assets/logo-cloudcommand.png"
        alt="CloudCommand"
        width="800">
 </p>
