@@ -2,51 +2,363 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CloudPortal</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+  <title>CloudCommand</title>
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
+  <header class="app-header">
+    <a class="brand" href="#" aria-label="CloudCommand home">
+      <svg
+        class="brand-icon"
+        viewBox="0 0 64 64"
+        aria-hidden="true"
+      >
+        <path
+          d="M20 39h27a11 11 0 0 0 1-22
+             16 16 0 0 0-30-4
+             13 13 0 0 0 2 26Z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="m18 48 7 6-7 6M31 60h13"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+      <span>CloudCommand</span>
+    </a>
+
+    <div id="api-status" class="api-status">
+      <span class="status-dot"></span>
+      <span class="status-label">Connecting</span>
+    </div>
+  </header>
+
   <main class="shell">
-    <header class="page-header">
-      <div>
-        <p class="eyebrow">CloudPortal</p>
-        <h1>Cluster Overview</h1>
-        <p class="subtitle">
-          Live operational status from the LaCasa Kubernetes provider.
+    <section id="loading-view" class="centered-view">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Loading CloudCommand…</p>
+    </section>
+
+    <section id="onboarding-view" hidden>
+      <div class="hero">
+        <p class="eyebrow">Welcome to CloudCommand</p>
+        <h1>Connect your first resource provider</h1>
+        <p class="hero-copy">
+          CloudCommand discovers infrastructure through resource
+          providers. Connect the Kubernetes environment you just
+          created to begin managing its capacity.
         </p>
       </div>
 
-      <button id="refresh-button" type="button">
-        Refresh
-      </button>
-    </header>
+      <div class="wizard">
+        <ol class="step-list" aria-label="Provider setup progress">
+          <li class="step active" data-step-indicator="1">
+            <span>1</span>
+            Provider
+          </li>
 
-    <section id="status-panel" class="status-panel">
-      <div>
-        <span class="label">Cluster status</span>
-        <strong id="cluster-status">Loading…</strong>
-      </div>
+          <li class="step" data-step-indicator="2">
+            <span>2</span>
+            Connection
+          </li>
 
-      <div>
-        <span class="label">Nodes ready</span>
-        <strong id="node-summary">—</strong>
-      </div>
+          <li class="step" data-step-indicator="3">
+            <span>3</span>
+            Discovery
+          </li>
 
-      <div>
-        <span class="label">Last updated</span>
-        <strong id="last-updated">—</strong>
+          <li class="step" data-step-indicator="4">
+            <span>4</span>
+            Register
+          </li>
+        </ol>
+
+        <form id="provider-form">
+          <section class="wizard-panel" data-step-panel="1">
+            <div class="panel-heading">
+              <p class="eyebrow">Step 1</p>
+              <h2>Choose a provider type</h2>
+              <p>
+                Kubernetes is the first provider supported by this
+                CloudCommand prototype.
+              </p>
+            </div>
+
+            <label class="provider-option selected">
+              <input
+                type="radio"
+                name="provider-type"
+                value="kubernetes"
+                checked
+              >
+
+              <span class="provider-symbol">
+                <span class="kubernetes-mark">K8s</span>
+              </span>
+
+              <span>
+                <strong>Kubernetes</strong>
+                <small>
+                  Discover nodes, capacity, workloads, storage, and
+                  network capabilities.
+                </small>
+              </span>
+            </label>
+
+            <div class="wizard-actions">
+              <span></span>
+              <button class="primary-button" type="button" data-next>
+                Continue
+              </button>
+            </div>
+          </section>
+
+          <section
+            class="wizard-panel"
+            data-step-panel="2"
+            hidden
+          >
+            <div class="panel-heading">
+              <p class="eyebrow">Step 2</p>
+              <h2>Describe this provider</h2>
+              <p>
+                Give the environment a stable identity inside
+                CloudCommand.
+              </p>
+            </div>
+
+            <div class="form-grid">
+              <label>
+                <span>Display name</span>
+                <input
+                  id="provider-name"
+                  name="provider-name"
+                  value="Local Kubernetes"
+                  required
+                >
+              </label>
+
+              <label>
+                <span>Provider ID</span>
+                <input
+                  id="provider-id"
+                  name="provider-id"
+                  value="local-kubernetes"
+                  pattern="[a-z0-9-]+"
+                  required
+                >
+              </label>
+
+              <label>
+                <span>Environment</span>
+                <select id="provider-environment">
+                  <option value="local" selected>Local</option>
+                  <option value="development">Development</option>
+                  <option value="staging">Staging</option>
+                  <option value="production">Production</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Location</span>
+                <input
+                  id="provider-location"
+                  value="Local infrastructure"
+                >
+              </label>
+
+              <label class="full-width">
+                <span>Description</span>
+                <textarea
+                  id="provider-description"
+                  rows="3"
+                >Three-node Kubernetes resource provider.</textarea>
+              </label>
+            </div>
+
+            <div class="connection-note">
+              <strong>Connection method</strong>
+              <p>
+                CloudCommand will use the Kubernetes configuration
+                already installed on this machine.
+              </p>
+              <code>~/.kube/config</code>
+            </div>
+
+            <div class="wizard-actions">
+              <button
+                class="secondary-button"
+                type="button"
+                data-back
+              >
+                Back
+              </button>
+
+              <button class="primary-button" type="button" data-next>
+                Test connection
+              </button>
+            </div>
+          </section>
+
+          <section
+            class="wizard-panel"
+            data-step-panel="3"
+            hidden
+          >
+            <div class="panel-heading">
+              <p class="eyebrow">Step 3</p>
+              <h2>Discover provider capacity</h2>
+              <p>
+                CloudCommand will connect without saving the provider
+                and inspect the resources it exposes.
+              </p>
+            </div>
+
+            <div id="discovery-pending" class="discovery-pending">
+              <div class="spinner" aria-hidden="true"></div>
+              <strong>Testing Kubernetes connection…</strong>
+              <p>
+                Reading nodes, roles, versions, and available capacity.
+              </p>
+            </div>
+
+            <div id="discovery-error" class="message error" hidden></div>
+
+            <div id="discovery-results" hidden>
+              <div class="message success">
+                <strong>Connection successful</strong>
+                <span>
+                  CloudCommand can communicate with this provider.
+                </span>
+              </div>
+
+              <div class="metric-grid">
+                <article class="metric-card">
+                  <span>Provider status</span>
+                  <strong id="discovered-status">—</strong>
+                </article>
+
+                <article class="metric-card">
+                  <span>Nodes ready</span>
+                  <strong id="discovered-nodes">—</strong>
+                </article>
+
+                <article class="metric-card">
+                  <span>Total CPU</span>
+                  <strong id="discovered-cpu">—</strong>
+                </article>
+
+                <article class="metric-card">
+                  <span>Total memory</span>
+                  <strong id="discovered-memory">—</strong>
+                </article>
+              </div>
+
+              <div>
+                <h3>Discovered nodes</h3>
+                <div id="discovered-node-list" class="node-list"></div>
+              </div>
+            </div>
+
+            <div class="wizard-actions">
+              <button
+                class="secondary-button"
+                type="button"
+                data-back
+              >
+                Back
+              </button>
+
+              <button
+                id="continue-to-register"
+                class="primary-button"
+                type="button"
+                data-next
+                disabled
+              >
+                Continue
+              </button>
+            </div>
+          </section>
+
+          <section
+            class="wizard-panel"
+            data-step-panel="4"
+            hidden
+          >
+            <div class="panel-heading">
+              <p class="eyebrow">Step 4</p>
+              <h2>Register this resource provider</h2>
+              <p>
+                Review the provider identity before adding it to
+                CloudCommand.
+              </p>
+            </div>
+
+            <div id="provider-review" class="review-card"></div>
+            <div id="registration-error" class="message error" hidden></div>
+
+            <div class="wizard-actions">
+              <button
+                class="secondary-button"
+                type="button"
+                data-back
+              >
+                Back
+              </button>
+
+              <button
+                id="register-provider"
+                class="primary-button"
+                type="submit"
+              >
+                Register provider
+              </button>
+            </div>
+          </section>
+        </form>
       </div>
     </section>
 
-    <section>
-      <div class="section-heading">
-        <h2>Nodes</h2>
-        <p>Control-plane and worker capacity currently registered.</p>
+    <section id="providers-view" hidden>
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">CloudCommand</p>
+          <h1>Resource Providers</h1>
+          <p>
+            Connected infrastructure environments and their current
+            operational status.
+          </p>
+        </div>
+
+        <button id="add-provider-button" class="primary-button">
+          + Add provider
+        </button>
       </div>
 
-      <div id="error-message" class="error-message" hidden></div>
-      <div id="nodes-grid" class="nodes-grid"></div>
+      <div id="provider-grid" class="provider-grid"></div>
+    </section>
+
+    <section id="provider-detail-view" hidden>
+      <button id="back-to-providers" class="text-button">
+        ← Resource Providers
+      </button>
+
+      <div id="provider-detail"></div>
     </section>
   </main>
 

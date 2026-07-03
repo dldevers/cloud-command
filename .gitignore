@@ -3,3 +3,9 @@ node_modules/
 .env
 dist/
 coverage/
+
+# CloudCommand runtime data
+portal/api/data/
+
+# Local backup files
+*.old-dashboard

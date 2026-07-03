@@ -1273,3 +1273,11 @@ The Kubernetes cluster is the implementation layer.
 CloudCommand provides the operational abstraction above it.
 
 Applications request capacity. Providers satisfy that request.
+
+---
+
+## Next Step: Register the Cluster in CloudCommand
+
+Once the Kubernetes cluster is running and all nodes are ready, connect it to CloudCommand for provider discovery, health monitoring, and capacity management.
+
+[Register your Kubernetes cluster in CloudCommand](cloudcommand-provider-setup.md)
