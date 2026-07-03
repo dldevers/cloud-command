@@ -52,6 +52,10 @@ Before beginning, you need:
 - Administrative access to the Mac
 - Basic familiarity with Linux commands
 
+> Using VMware, Proxmox, Hyper-V, VirtualBox, cloud VMs, or another platform?
+> Start with the [platform-independent virtual-machine prerequisites](virtual-machine-prerequisites.md).
+> Once your three Linux machines can communicate, continue with the Kubernetes installation steps in this guide.
+
 ## Download UTM
 
 Download UTM directly from the official UTM website:
