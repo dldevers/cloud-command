@@ -13,6 +13,7 @@ const views = {
 const apiStatus = $('#api-status');
 const providerForm = $('#provider-form');
 const providerGrid = $('#provider-grid');
+const dashboardProviderGrid = $('#dashboard-provider-grid');
 const providerDetail = $('#provider-detail');
 
 let currentStep = 1;
@@ -324,6 +325,76 @@ function renderProviderCard(provider) {
   return card;
 }
 
+
+function renderDashboardProvider(provider) {
+  const discovery = provider.discovery || {};
+  const summary = discovery.summary || {};
+  const healthy =
+    provider.status === 'healthy' ||
+    summary.readyNodes === summary.totalNodes;
+
+  return `
+    <button
+      class="dashboard-provider-node ${healthy ? 'healthy' : 'degraded'}"
+      type="button"
+      data-provider-id="${escapeHtml(provider.id)}"
+    >
+      <div class="node-status">
+        <span class="status-dot"></span>
+        ${healthy ? 'Healthy' : 'Degraded'}
+      </div>
+
+      <h3>${escapeHtml(provider.name)}</h3>
+
+      <p>
+        ${escapeHtml(provider.type || 'Kubernetes')}
+        ·
+        ${escapeHtml(provider.environment || 'Unknown')}
+      </p>
+
+      <div class="provider-node-metrics">
+        <span>
+          <strong>${escapeHtml(summary.readyNodes ?? 0)}</strong>
+          ready
+        </span>
+
+        <span>
+          <strong>${escapeHtml(summary.totalNodes ?? 0)}</strong>
+          nodes
+        </span>
+
+        <span>
+          <strong>${escapeHtml(summary.cpuCapacity || '—')}</strong>
+          CPU
+        </span>
+
+        <span>
+          <strong>${escapeHtml(summary.memoryCapacity || '—')}</strong>
+          memory
+        </span>
+      </div>
+    </button>
+  `;
+}
+
+function renderDashboardProviders(providers) {
+  if (!dashboardProviderGrid) {
+    return;
+  }
+
+  dashboardProviderGrid.innerHTML = providers
+    .map(renderDashboardProvider)
+    .join('');
+
+  dashboardProviderGrid
+    .querySelectorAll('[data-provider-id]')
+    .forEach((button) => {
+      button.addEventListener('click', () => {
+        loadProviderDetail(button.dataset.providerId);
+      });
+    });
+}
+
 async function loadProviders() {
   showView('loading');
 
@@ -342,7 +413,8 @@ async function loadProviders() {
       ...response.items.map(renderProviderCard),
     );
 
-    showView('providers');
+    renderDashboardProviders(response.items);
+    showView('dashboard');
   } catch (error) {
     setApiStatus(false);
 
@@ -536,6 +608,15 @@ $('#provider-name')?.addEventListener('input', (event) => {
 $('#add-provider-button')?.addEventListener('click', () => {
   setStep(1);
   showView('onboarding');
+});
+
+$('#providers-add-button')?.addEventListener('click', () => {
+  setStep(1);
+  showView('onboarding');
+});
+
+$('#show-providers-button')?.addEventListener('click', () => {
+  showView('providers');
 });
 
 $('#back-to-providers')?.addEventListener(
