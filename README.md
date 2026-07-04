@@ -7,9 +7,9 @@
 # CloudCommand
 ## Screenshots
 
-### Resource Providers
+### Dashboard 
 
-![CloudCommand resource providers dashboard](docs/assets/screenshots/resource-providers-dashboard.png)
+![CloudCommand resource providers dashboard](docs/assets/screenshots/dashboard-cloudcommand.png)
 
 ### Kubernetes Provider Registration
 

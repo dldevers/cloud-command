@@ -326,52 +326,163 @@ function renderProviderCard(provider) {
 }
 
 
+function renderCapacitySegments(allocated, total, className = 'cloudcommand') {
+  const safeTotal = Math.max(Number(total) || 0, 1);
+  const safeAllocated = Math.min(Math.max(Number(allocated) || 0, 0), safeTotal);
+
+  return Array.from({ length: safeTotal }, (_, index) => {
+    const state = index < safeAllocated ? `used ${className}` : 'free';
+    return `<span class="segment ${state}"></span>`;
+  }).join('');
+}
+
+function buildProviderGaugeStyle(c1Allocated, s1Allocated, n1Allocated, totalCapacity) {
+  const total = Math.max(Number(totalCapacity) || 0, 1);
+  const c1 = Math.max(Number(c1Allocated) || 0, 0);
+  const s1 = Math.max(Number(s1Allocated) || 0, 0);
+  const n1 = Math.max(Number(n1Allocated) || 0, 0);
+
+  const c1End = (c1 / total) * 100;
+  const s1End = ((c1 + s1) / total) * 100;
+  const n1End = ((c1 + s1 + n1) / total) * 100;
+
+  return `
+    --provider-gauge:
+      conic-gradient(
+        rgba(39, 165, 230, 0.78) 0% ${c1End}%,
+        rgba(51, 207, 146, 0.72) ${c1End}% ${s1End}%,
+        rgba(167, 139, 250, 0.72) ${s1End}% ${n1End}%,
+        rgba(78, 111, 132, 0.16) ${n1End}% 100%
+      );
+  `;
+}
+
 function renderDashboardProvider(provider) {
   const discovery = provider.discovery || {};
   const summary = discovery.summary || {};
+  const nodes = discovery.nodes || [];
+
+  const totalNodes =
+    provider.summary?.nodes ??
+    summary.totalNodes ??
+    discovery.totalNodes ??
+    provider.totalNodes ??
+    nodes.length ??
+    0;
+
+  const readyNodes =
+    provider.summary?.readyNodes ??
+    summary.readyNodes ??
+    discovery.readyNodes ??
+    provider.readyNodes ??
+    nodes.filter((node) => node.ready || node.status === 'Ready').length ??
+    0;
+
+  const resourceClasses =
+    provider.resourceClasses ??
+    provider.summary?.resourceClasses ??
+    discovery.resourceClasses ??
+    {};
+
+  const c1Capacity = resourceClasses.C1?.total ?? resourceClasses.c1?.total ?? 24;
+  const s1Capacity = resourceClasses.S1?.total ?? resourceClasses.s1?.total ?? 16;
+  const n1Capacity = resourceClasses.N1?.total ?? resourceClasses.n1?.total ?? 12;
+
+  const c1Allocated = resourceClasses.C1?.allocated ?? resourceClasses.c1?.allocated ?? 14;
+  const s1Allocated = resourceClasses.S1?.allocated ?? resourceClasses.s1?.allocated ?? 6;
+  const n1Allocated = resourceClasses.N1?.allocated ?? resourceClasses.n1?.allocated ?? 3;
+
+  const totalCapacity = c1Capacity + s1Capacity + n1Capacity;
+  const totalAllocated = c1Allocated + s1Allocated + n1Allocated;
+
   const healthy =
     provider.status === 'healthy' ||
-    summary.readyNodes === summary.totalNodes;
+    (totalNodes > 0 && readyNodes === totalNodes);
 
   return `
     <button
-      class="dashboard-provider-node ${healthy ? 'healthy' : 'degraded'}"
+      class="dashboard-provider-node provider-capacity-card ${healthy ? 'healthy' : 'degraded'}"
       type="button"
       data-provider-id="${escapeHtml(provider.id)}"
     >
-      <div class="node-status">
-        <span class="status-dot"></span>
-        ${healthy ? 'Healthy' : 'Degraded'}
+      <div class="provider-card-title">
+        <strong>${escapeHtml(provider.name)}</strong>
+        <span>${healthy ? 'Healthy' : 'Degraded'}</span>
       </div>
 
-      <h3>${escapeHtml(provider.name)}</h3>
-
-      <p>
+      <p class="provider-class-summary">
         ${escapeHtml(provider.type || 'Kubernetes')}
         ·
         ${escapeHtml(provider.environment || 'Unknown')}
+        ·
+        ${escapeHtml(readyNodes)} ready / ${escapeHtml(totalNodes)} nodes
       </p>
 
-      <div class="provider-node-metrics">
-        <span>
-          <strong>${escapeHtml(summary.readyNodes ?? 0)}</strong>
-          ready
-        </span>
+      <div class="provider-card-body">
+        <div
+          class="provider-gauge"
+          style="${buildProviderGaugeStyle(c1Allocated, s1Allocated, n1Allocated, totalCapacity)}"
+          aria-label="${escapeHtml(totalAllocated)} of ${escapeHtml(totalCapacity)} provider units allocated"
+        >
+          <div class="provider-gauge-inner">
+            <strong>
+              <span class="gauge-used healthy">${escapeHtml(totalAllocated)}</span><span class="gauge-divider">/</span><span class="gauge-total">${escapeHtml(totalCapacity)}</span>
+            </strong>
+          </div>
+        </div>
 
-        <span>
-          <strong>${escapeHtml(summary.totalNodes ?? 0)}</strong>
-          nodes
-        </span>
+        <div class="provider-class-legend">
+          <div class="provider-class-row provider-class-c1">
+            <strong>C1</strong>
 
-        <span>
-          <strong>${escapeHtml(summary.cpuCapacity || '—')}</strong>
-          CPU
-        </span>
+            <span>
+              Compute
+              <em>${escapeHtml(c1Allocated)} / ${escapeHtml(c1Capacity)}</em>
+            </span>
 
-        <span>
-          <strong>${escapeHtml(summary.memoryCapacity || '—')}</strong>
-          memory
-        </span>
+            <div class="provider-mini-rail">
+              ${renderCapacitySegments(c1Allocated, c1Capacity, 'cloudcommand')}
+            </div>
+
+            <span class="provider-unit-count healthy">
+              <strong>${escapeHtml(c1Allocated)}</strong> / ${escapeHtml(c1Capacity)}
+            </span>
+          </div>
+
+          <div class="provider-class-row provider-class-s1">
+            <strong>S1</strong>
+
+            <span>
+              Storage
+              <em>${escapeHtml(s1Allocated)} / ${escapeHtml(s1Capacity)}</em>
+            </span>
+
+            <div class="provider-mini-rail">
+              ${renderCapacitySegments(s1Allocated, s1Capacity, 'telemetry')}
+            </div>
+
+            <span class="provider-unit-count healthy">
+              <strong>${escapeHtml(s1Allocated)}</strong> / ${escapeHtml(s1Capacity)}
+            </span>
+          </div>
+
+          <div class="provider-class-row provider-class-n1">
+            <strong>N1</strong>
+
+            <span>
+              Network
+              <em>${escapeHtml(n1Allocated)} / ${escapeHtml(n1Capacity)}</em>
+            </span>
+
+            <div class="provider-mini-rail">
+              ${renderCapacitySegments(n1Allocated, n1Capacity, 'network')}
+            </div>
+
+            <span class="provider-unit-count healthy">
+              <strong>${escapeHtml(n1Allocated)}</strong> / ${escapeHtml(n1Capacity)}
+            </span>
+          </div>
+        </div>
       </div>
     </button>
   `;

@@ -1596,3 +1596,1230 @@ textarea:focus {
   color: #a9d7ee;
   font-weight: 500;
 }
+
+/* Console-style dashboard action buttons */
+
+.dashboard-header .button,
+.layer-heading .button,
+.runbook-strip .button {
+  padding: 7px 11px;
+  color: #8fcdf0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: none;
+  background: transparent;
+  border: 1px solid rgba(91, 190, 247, 0.42);
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+.dashboard-header .button.primary,
+.layer-heading .button.primary,
+.layer-heading .button.secondary,
+.runbook-strip .button.ghost {
+  color: #8fcdf0;
+  background: transparent;
+  border-color: rgba(91, 190, 247, 0.42);
+  box-shadow: none;
+}
+
+.dashboard-header .button:hover,
+.layer-heading .button:hover,
+.runbook-strip .button:hover {
+  color: #b9eaff;
+  background: rgba(58, 156, 216, 0.06);
+  border-color: rgba(120, 210, 255, 0.58);
+  box-shadow: none;
+  transform: none;
+}
+
+.dashboard-header .button:focus-visible,
+.layer-heading .button:focus-visible,
+.runbook-strip .button:focus-visible {
+  outline: 1px solid rgba(160, 220, 255, 0.85);
+  outline-offset: 2px;
+}
+
+/* Unified CloudCommand brand color */
+
+.logo,
+.logo:visited,
+.logo:hover {
+  color: #a9d7ee;
+  text-decoration: none;
+}
+
+.logo svg,
+.dashboard-brand-icon {
+  color: #a9d7ee;
+  filter: none;
+}
+
+.logo span,
+.dashboard-brand strong {
+  color: #a9d7ee;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+}
+
+.logo:hover svg,
+.logo:hover span,
+.dashboard-brand:hover svg,
+.dashboard-brand:hover strong {
+  color: #a9d7ee;
+}
+
+.dashboard-brand-icon {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+}
+
+/* Provider cards aligned with Resource Class cards */
+
+.dashboard-provider-grid {
+  grid-template-columns: 1fr;
+}
+
+.provider-capacity-card {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  background: rgba(2, 10, 17, 0.76);
+  border: 1px solid rgba(91, 183, 242, 0.26);
+  border-radius: 6px;
+  text-align: left;
+}
+
+.provider-capacity-card .node-status,
+.provider-capacity-card .provider-node-summary,
+.provider-capacity-card .provider-resource-classes,
+.provider-capacity-card .provider-node-metrics,
+.provider-capacity-card h3 {
+  display: none !important;
+}
+
+.provider-card-title,
+.provider-card-usage,
+.provider-health-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.provider-card-title strong {
+  color: #a9d7ee;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.provider-card-title span {
+  color: #7897aa;
+  font-size: 0.78rem;
+}
+
+.provider-card-usage {
+  margin: 18px 0 8px;
+  color: #7897aa;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.provider-class-summary {
+  margin: 0 0 10px;
+  color: #6f91a5;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.provider-card-rail.capacity-rail {
+  grid-template-columns: repeat(52, minmax(3px, 1fr));
+}
+
+.provider-card-rail .segment {
+  height: 22px;
+}
+
+.provider-health-line {
+  justify-content: flex-start;
+  gap: 12px;
+  margin-top: 10px;
+  color: #6f91a5;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+}
+
+.provider-capacity-card.healthy {
+  border-color: rgba(91, 183, 242, 0.26);
+}
+
+.provider-capacity-card.degraded {
+  border-color: rgba(245, 158, 11, 0.42);
+}
+
+/* Dashboard layout refinement pass */
+
+body[data-view="dashboard"] .app-header {
+  display: none;
+}
+
+body[data-view="dashboard"] main {
+  padding-top: 0;
+}
+
+.dashboard-shell {
+  grid-template-columns: 220px minmax(0, 1fr);
+  width: min(100%, 1500px);
+  margin: 0 auto;
+}
+
+.dashboard-main {
+  padding: 22px 26px;
+}
+
+.dashboard-header::after {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  color: #75d6a1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  content: "● Connected";
+}
+
+.layer-index {
+  display: none !important;
+}
+
+.resource-layer .layer-summary {
+  display: none !important;
+}
+
+/* Provider card as a Resource-Class-style block */
+
+.dashboard-provider-grid {
+  grid-template-columns: 1fr;
+}
+
+.provider-capacity-card {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  background: rgba(2, 10, 17, 0.76);
+  border: 1px solid rgba(91, 183, 242, 0.26);
+  border-radius: 6px;
+  text-align: left;
+}
+
+.provider-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.provider-card-title strong {
+  color: #a9d7ee;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.provider-card-title span {
+  color: #75d6a1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+}
+
+.provider-class-summary {
+  margin: 7px 0 14px;
+  color: #6f91a5;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.provider-card-body {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+}
+
+.provider-gauge {
+  display: grid;
+  place-items: center;
+  width: 118px;
+  height: 118px;
+  background: var(--provider-gauge);
+  border-radius: 50%;
+  box-shadow: inset 0 0 20px rgba(4, 14, 24, 0.72);
+}
+
+.provider-gauge-inner {
+  display: grid;
+  place-items: center;
+  width: 82px;
+  height: 82px;
+  background: #050b12;
+  border: 1px solid rgba(91, 183, 242, 0.18);
+  border-radius: 50%;
+}
+
+.provider-gauge-inner strong {
+  color: #a9d7ee;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.provider-gauge-inner span,
+.provider-gauge-inner em {
+  color: #7897aa;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+  font-style: normal;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.provider-class-legend {
+  display: grid;
+  gap: 8px;
+}
+
+.provider-class-legend div {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 9px;
+  background: rgba(5, 18, 29, 0.64);
+  border: 1px solid rgba(91, 183, 242, 0.18);
+}
+
+.provider-class-legend strong {
+  color: #a9d7ee;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.provider-class-legend span {
+  color: #7897aa;
+  font-size: 0.72rem;
+}
+
+.provider-class-legend em {
+  color: #7fb2ce;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.66rem;
+  font-style: normal;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 760px) {
+  .provider-card-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Resource Class color chips matching provider gauge */
+
+.resource-title strong,
+.provider-class-legend strong {
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  height: 26px;
+  padding: 0 7px;
+  color: #d8f4ff;
+  background: rgba(39, 165, 230, 0.72);
+  border: 1px solid rgba(91, 206, 255, 0.78);
+  box-shadow: 0 0 8px rgba(43, 177, 238, 0.22);
+}
+
+.resource-class-node:nth-child(2) .resource-title strong,
+.provider-class-legend div:nth-child(2) strong {
+  color: #d8fff1;
+  background: rgba(51, 207, 146, 0.68);
+  border-color: rgba(94, 236, 176, 0.72);
+  box-shadow: 0 0 8px rgba(58, 217, 158, 0.18);
+}
+
+.resource-class-node:nth-child(3) .resource-title strong,
+.provider-class-legend div:nth-child(3) strong {
+  color: #eee9ff;
+  background: rgba(167, 139, 250, 0.72);
+  border-color: rgba(196, 181, 253, 0.72);
+  box-shadow: 0 0 8px rgba(167, 139, 250, 0.18);
+}
+
+.resource-title,
+.provider-class-legend div {
+  align-items: center;
+}
+
+.resource-title strong,
+.provider-class-legend strong {
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* Provider mini resource rails */
+
+.provider-class-legend {
+  gap: 10px;
+}
+
+.provider-class-legend .provider-class-row {
+  display: grid;
+  grid-template-columns: 42px 92px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 9px;
+}
+
+.provider-class-legend .provider-class-row > span {
+  display: grid;
+  gap: 3px;
+  color: #7897aa;
+  font-size: 0.72rem;
+  line-height: 1.1;
+}
+
+.provider-class-legend .provider-class-row em {
+  color: #6f91a5;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.6rem;
+  font-style: normal;
+  letter-spacing: 0.04em;
+}
+
+.provider-mini-rail {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6px, 1fr));
+  gap: 3px;
+  align-items: center;
+}
+
+.provider-mini-rail .segment {
+  height: 9px;
+  min-width: 5px;
+  background: rgba(78, 111, 132, 0.16);
+  border: 1px solid rgba(93, 141, 169, 0.18);
+}
+
+.provider-mini-rail .segment.used.cloudcommand {
+  background: rgba(39, 165, 230, 0.72);
+  border-color: rgba(91, 206, 255, 0.78);
+}
+
+.provider-mini-rail .segment.used.telemetry {
+  background: rgba(51, 207, 146, 0.68);
+  border-color: rgba(94, 236, 176, 0.72);
+}
+
+.provider-mini-rail .segment.used.network {
+  background: rgba(167, 139, 250, 0.72);
+  border-color: rgba(196, 181, 253, 0.72);
+}
+
+/* Compact provider resource-unit rows */
+
+.provider-card-body {
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 16px;
+}
+
+.provider-gauge {
+  width: 96px;
+  height: 96px;
+}
+
+.provider-gauge-inner {
+  width: 66px;
+  height: 66px;
+}
+
+.provider-gauge-inner strong {
+  font-size: 0.95rem;
+}
+
+.provider-gauge-inner span,
+.provider-gauge-inner em {
+  font-size: 0.52rem;
+}
+
+.provider-class-legend {
+  gap: 6px;
+}
+
+.provider-class-legend .provider-class-row {
+  display: grid;
+  grid-template-columns: 34px 72px minmax(120px, 1fr);
+  gap: 8px;
+  align-items: center;
+  padding: 6px 7px;
+  background: rgba(5, 18, 29, 0.44);
+  border: 1px solid rgba(91, 183, 242, 0.14);
+}
+
+.provider-class-legend .provider-class-row strong {
+  min-width: 28px;
+  height: 22px;
+  padding: 0 5px;
+  font-size: 0.68rem;
+}
+
+.provider-class-legend .provider-class-row > span {
+  display: block;
+  color: #7897aa;
+  font-size: 0.68rem;
+  line-height: 1.15;
+}
+
+.provider-class-legend .provider-class-row em {
+  display: block;
+  margin-top: 2px;
+  color: #6f91a5;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+  font-style: normal;
+  letter-spacing: 0.02em;
+}
+
+.provider-class-legend .provider-class-row em::first-letter {
+  color: inherit;
+}
+
+/* Status-colored allocation numbers */
+.provider-class-c1 em,
+.provider-class-s1 em,
+.provider-class-n1 em {
+  color: #6f91a5;
+}
+
+.provider-class-c1 em {
+  color: #75d6a1;
+}
+
+.provider-class-s1 em {
+  color: #75d6a1;
+}
+
+.provider-class-n1 em {
+  color: #75d6a1;
+}
+
+/* Tiny equalizer-style LED rails */
+.provider-mini-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  align-items: center;
+  max-width: 190px;
+}
+
+.provider-mini-rail .segment {
+  width: 5px;
+  height: 10px;
+  min-width: 5px;
+  flex: 0 0 5px;
+  background: rgba(78, 111, 132, 0.14);
+  border: 1px solid rgba(93, 141, 169, 0.18);
+  box-shadow: none;
+}
+
+.provider-mini-rail .segment.used.cloudcommand {
+  background: rgba(39, 165, 230, 0.72);
+  border-color: rgba(91, 206, 255, 0.62);
+}
+
+.provider-mini-rail .segment.used.telemetry {
+  background: rgba(51, 207, 146, 0.68);
+  border-color: rgba(94, 236, 176, 0.58);
+}
+
+.provider-mini-rail .segment.used.network {
+  background: rgba(167, 139, 250, 0.72);
+  border-color: rgba(196, 181, 253, 0.58);
+}
+
+.provider-capacity-card {
+  padding: 14px;
+}
+
+.provider-card-title strong {
+  font-size: 0.88rem;
+}
+
+.provider-class-summary {
+  margin-bottom: 12px;
+  font-size: 0.72rem;
+}
+
+/* Provider LED rail refinement: single-line unit meters */
+
+.provider-class-legend .provider-class-row {
+  grid-template-columns: 34px 92px minmax(0, 1fr);
+  gap: 8px;
+  padding: 4px 0;
+  background: transparent;
+  border: 0;
+}
+
+.provider-mini-rail {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+  max-width: none;
+  overflow: hidden;
+}
+
+.provider-mini-rail .segment {
+  width: 5px;
+  height: 12px;
+  min-width: 5px;
+  flex: 0 0 5px;
+  background: rgba(78, 111, 132, 0.12);
+  border: 1px solid rgba(93, 141, 169, 0.22);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.provider-mini-rail .segment.used.cloudcommand {
+  background: rgba(39, 165, 230, 0.78);
+  border-color: rgba(91, 206, 255, 0.7);
+}
+
+.provider-mini-rail .segment.used.telemetry {
+  background: rgba(51, 207, 146, 0.72);
+  border-color: rgba(94, 236, 176, 0.64);
+}
+
+.provider-mini-rail .segment.used.network {
+  background: rgba(167, 139, 250, 0.74);
+  border-color: rgba(196, 181, 253, 0.64);
+}
+
+.provider-class-legend .provider-class-row > span {
+  white-space: nowrap;
+}
+
+/* Fix provider LED rows: row is the card, rail is only tiny units */
+
+.provider-class-legend {
+  display: grid;
+  gap: 6px;
+}
+
+.provider-class-legend > .provider-class-row {
+  display: grid !important;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 7px 8px;
+  background: rgba(5, 18, 29, 0.50);
+  border: 1px solid rgba(91, 183, 242, 0.18);
+}
+
+.provider-class-legend > .provider-class-row > strong {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  min-width: 34px;
+  height: 24px;
+  padding: 0;
+  color: #d8f4ff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: rgba(39, 165, 230, 0.72);
+  border: 1px solid rgba(91, 206, 255, 0.78);
+  box-shadow: 0 0 8px rgba(43, 177, 238, 0.18);
+}
+
+.provider-class-legend > .provider-class-s1 > strong {
+  color: #d8fff1;
+  background: rgba(51, 207, 146, 0.68);
+  border-color: rgba(94, 236, 176, 0.72);
+}
+
+.provider-class-legend > .provider-class-n1 > strong {
+  color: #eee9ff;
+  background: rgba(167, 139, 250, 0.72);
+  border-color: rgba(196, 181, 253, 0.72);
+}
+
+.provider-class-legend > .provider-class-row > span {
+  display: none;
+}
+
+/* This must beat the old broad .provider-class-legend div rule */
+.provider-class-legend > .provider-class-row > .provider-mini-rail {
+  display: flex !important;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1px;
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow: hidden;
+}
+
+.provider-class-legend > .provider-class-row > .provider-mini-rail .segment {
+  display: block;
+  width: 6px;
+  min-width: 6px;
+  height: 14px;
+  flex: 0 0 6px;
+  padding: 0;
+  background: rgba(78, 111, 132, 0.14);
+  border: 1px solid rgba(93, 141, 169, 0.20);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.provider-class-legend > .provider-class-row > .provider-mini-rail .segment.used.cloudcommand {
+  background: rgba(39, 165, 230, 0.78);
+  border-color: rgba(91, 206, 255, 0.70);
+}
+
+.provider-class-legend > .provider-class-row > .provider-mini-rail .segment.used.telemetry {
+  background: rgba(51, 207, 146, 0.72);
+  border-color: rgba(94, 236, 176, 0.64);
+}
+
+.provider-class-legend > .provider-class-row > .provider-mini-rail .segment.used.network {
+  background: rgba(167, 139, 250, 0.74);
+  border-color: rgba(196, 181, 253, 0.64);
+}
+
+/* Full application console mode */
+
+.app-header {
+  display: none !important;
+}
+
+main {
+  padding: 0 !important;
+}
+
+.dashboard-shell {
+  min-height: 100vh;
+  width: min(100%, 1500px);
+  margin: 0 auto;
+  border-top: 0;
+}
+
+.dashboard-main {
+  padding-top: 24px;
+}
+
+/* Provider card final layout: gauge left, resource rails right */
+
+.provider-card-body {
+  display: grid !important;
+  grid-template-columns: 104px minmax(0, 1fr) !important;
+  gap: 18px !important;
+  align-items: center !important;
+}
+
+.provider-gauge {
+  width: 92px !important;
+  height: 92px !important;
+  justify-self: start !important;
+}
+
+.provider-gauge-inner {
+  width: 62px !important;
+  height: 62px !important;
+  gap: 0 !important;
+}
+
+.provider-gauge-caption {
+  display: none !important;
+}
+
+.provider-gauge-inner strong {
+  display: flex !important;
+  align-items: baseline !important;
+  justify-content: center !important;
+  gap: 1px !important;
+  color: #7fb2ce !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+}
+
+.gauge-used {
+  color: #75d6a1 !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+}
+
+.gauge-divider,
+.gauge-total {
+  color: #7fb2ce !important;
+  font-size: 0.72rem !important;
+  font-weight: 500 !important;
+}
+
+.provider-class-legend {
+  display: grid !important;
+  gap: 6px !important;
+  min-width: 0 !important;
+}
+
+.provider-class-legend > .provider-class-row {
+  display: grid !important;
+  grid-template-columns: 36px minmax(0, 1fr) 54px !important;
+  gap: 8px !important;
+  align-items: center !important;
+  padding: 4px 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+
+.provider-class-legend > .provider-class-row > strong {
+  display: inline-grid !important;
+  place-items: center !important;
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 22px !important;
+  padding: 0 !important;
+  font-size: 0.66rem !important;
+}
+
+.provider-class-legend > .provider-class-row > span {
+  display: none !important;
+}
+
+.provider-class-legend > .provider-class-row > .provider-mini-rail {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  gap: 1px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+.provider-class-legend > .provider-class-row > .provider-mini-rail .segment {
+  display: block !important;
+  width: 5px !important;
+  min-width: 5px !important;
+  height: 12px !important;
+  flex: 0 0 5px !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.provider-unit-count {
+  justify-self: end !important;
+  color: #7fb2ce !important;
+  font-size: 0.62rem !important;
+  white-space: nowrap !important;
+}
+
+.provider-unit-count strong {
+  color: #75d6a1 !important;
+  font-size: 0.62rem !important;
+  font-weight: 600 !important;
+}
+
+.provider-capacity-card {
+  padding: 14px !important;
+}
+
+.provider-class-summary {
+  margin: 5px 0 12px !important;
+  font-size: 0.7rem !important;
+}
+
+/* Brand wordmark: align like command text after the prompt */
+
+.dashboard-brand {
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.dashboard-brand-icon {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+}
+
+.dashboard-brand > div:last-child {
+  display: flex;
+  align-items: flex-end;
+  min-height: 48px;
+  padding-bottom: 3px;
+}
+
+.dashboard-brand strong {
+  color: #a9d7ee;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+/* Brand wordmark: align like command text after the prompt */
+
+.dashboard-brand {
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.dashboard-brand-icon {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+}
+
+.dashboard-brand > div:last-child {
+  display: flex;
+  align-items: flex-end;
+  min-height: 48px;
+  padding-bottom: 3px;
+}
+
+.dashboard-brand strong {
+  color: #a9d7ee;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+/* Thin dashboard utility rail and layer-local actions */
+
+.dashboard-header {
+  min-height: 22px;
+  margin: 0 0 10px;
+  padding: 0 0 8px;
+  border-bottom: 1px solid rgba(89, 177, 235, 0.10);
+}
+
+.dashboard-header > div:not(.dashboard-utility-status),
+.dashboard-header h1,
+.dashboard-header .eyebrow {
+  display: none !important;
+}
+
+.dashboard-header::after {
+  display: none !important;
+}
+
+.dashboard-utility-status {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  color: #75d6a1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+}
+
+.dashboard-utility-status::before {
+  width: 7px;
+  height: 7px;
+  margin-right: 7px;
+  content: "";
+  background: #58e394;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(88, 227, 148, 0.7);
+}
+
+.layer-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.layer-actions .layer-summary {
+  color: #7fb2ce;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: none;
+}
+
+.layer-actions .button {
+  padding: 6px 9px;
+  color: #8fcdf0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  background: transparent;
+  border: 1px solid rgba(91, 190, 247, 0.38);
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+.layer-actions .button:hover {
+  color: #b9eaff;
+  background: rgba(58, 156, 216, 0.05);
+  border-color: rgba(120, 210, 255, 0.54);
+  transform: none;
+  box-shadow: none;
+}
+
+/* Make sure the Resources action is visible after earlier summary-hiding overrides */
+.resource-layer .layer-actions {
+  display: flex !important;
+}
+
+.resource-layer .layer-summary {
+  display: inline-flex !important;
+}
+
+/* Visual connectors: arrows only, no explanatory text */
+
+.flow-connector {
+  height: 34px;
+  margin: -2px 0;
+}
+
+.flow-connector span {
+  display: none;
+}
+
+.flow-line {
+  height: 30px;
+}
+
+/* Connector spacing refinement */
+
+.flow-connector {
+  height: 42px;
+  margin: 2px 0;
+}
+
+.flow-line {
+  height: 24px;
+  opacity: 0.72;
+}
+
+.flow-line::after {
+  width: 5px;
+  height: 5px;
+  margin: 21px 0 0 -2px;
+  opacity: 0.72;
+}
+
+/* Connector refinement: simple lines, no arrowheads */
+
+.flow-connector {
+  height: 32px;
+  margin: 4px 0;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+}
+
+.flow-line {
+  width: 1px;
+  height: 24px;
+  background: linear-gradient(
+    180deg,
+    rgba(91, 183, 242, 0.18),
+    rgba(91, 183, 242, 0.68),
+    rgba(91, 183, 242, 0.18)
+  );
+  box-shadow: 0 0 10px rgba(70, 183, 240, 0.18);
+  opacity: 0.85;
+}
+
+.flow-line::after {
+  display: none !important;
+}
+
+/* Application allocation chips match Resource identifiers */
+
+.allocation-tags span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  color: #7fb2ce;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68rem;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.allocation-tags span::first-letter {
+  color: inherit;
+}
+
+.allocation-tags span {
+  position: relative;
+}
+
+/* Hide the plain "C1 · 6" visual by restyling through fixed-width text behavior */
+.allocation-tags span {
+  min-width: 54px;
+}
+
+/* C1 */
+.allocation-tags span:nth-child(1) {
+  color: #27a5e6;
+}
+
+.allocation-tags span:nth-child(1)::before {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 22px;
+  color: #d8f4ff;
+  content: "C1";
+  background: rgba(39, 165, 230, 0.72);
+  border: 1px solid rgba(91, 206, 255, 0.78);
+  box-shadow: 0 0 8px rgba(43, 177, 238, 0.18);
+}
+
+/* S1 */
+.allocation-tags span:nth-child(2) {
+  color: #33cf92;
+}
+
+.allocation-tags span:nth-child(2)::before {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 22px;
+  color: #d8fff1;
+  content: "S1";
+  background: rgba(51, 207, 146, 0.68);
+  border: 1px solid rgba(94, 236, 176, 0.72);
+  box-shadow: 0 0 8px rgba(58, 217, 158, 0.14);
+}
+
+/* N1 */
+.allocation-tags span:nth-child(3) {
+  color: #a78bfa;
+}
+
+.allocation-tags span:nth-child(3)::before {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 22px;
+  color: #eee9ff;
+  content: "N1";
+  background: rgba(167, 139, 250, 0.72);
+  border: 1px solid rgba(196, 181, 253, 0.72);
+  box-shadow: 0 0 8px rgba(167, 139, 250, 0.14);
+}
+
+/* Application allocation chips: resource id + usage count */
+
+.allocation-tags {
+  gap: 7px;
+}
+
+.allocation-tags .allocation-chip {
+  display: inline-flex;
+  align-items: stretch;
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+  color: #7fb2ce;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68rem;
+  background: rgba(5, 18, 29, 0.64);
+  border: 1px solid rgba(91, 183, 242, 0.18);
+  box-shadow: none;
+}
+
+.allocation-tags .allocation-chip::before {
+  display: none !important;
+}
+
+.allocation-chip strong {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 22px;
+  color: #d8f4ff;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.allocation-chip em {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 22px;
+  padding: 0 7px;
+  color: #7fb2ce;
+  font-size: 0.66rem;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.allocation-chip.c1 strong {
+  background: rgba(39, 165, 230, 0.72);
+  border-right: 1px solid rgba(91, 206, 255, 0.56);
+}
+
+.allocation-chip.c1 em {
+  color: #27a5e6;
+}
+
+.allocation-chip.s1 strong {
+  color: #d8fff1;
+  background: rgba(51, 207, 146, 0.68);
+  border-right: 1px solid rgba(94, 236, 176, 0.52);
+}
+
+.allocation-chip.s1 em {
+  color: #33cf92;
+}
+
+.allocation-chip.n1 strong {
+  color: #eee9ff;
+  background: rgba(167, 139, 250, 0.72);
+  border-right: 1px solid rgba(196, 181, 253, 0.52);
+}
+
+.allocation-chip.n1 em {
+  color: #a78bfa;
+}

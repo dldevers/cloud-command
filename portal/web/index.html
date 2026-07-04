@@ -378,7 +378,7 @@
             </button>
 
             <button class="nav-item" type="button">
-              Resource Classes
+              Resources
             </button>
 
             <button
@@ -397,18 +397,7 @@
 
         <div class="dashboard-main">
           <header class="dashboard-header">
-            <div>
-              <p class="eyebrow">Operational control surface</p>
-              <h1>Applications and capacity</h1>
-            </div>
-
-            <button
-              id="deploy-application-button"
-              class="button primary"
-              type="button"
-            >
-              Deploy application
-            </button>
+            <div class="dashboard-utility-status">Connected</div>
           </header>
 
           <section class="control-layer applications-layer">
@@ -418,7 +407,16 @@
                 <h2>Applications</h2>
               </div>
 
-              <span class="layer-summary">2 running</span>
+              <div class="layer-actions">
+                <span class="layer-summary">2 running</span>
+                <button
+                  id="deploy-application-button"
+                  class="button secondary"
+                  type="button"
+                >
+                  Deploy application
+                </button>
+              </div>
             </div>
 
             <div class="application-grid">
@@ -432,9 +430,9 @@
                 <p>Control plane and provider orchestration</p>
 
                 <div class="allocation-tags">
-                  <span>C1 · 6</span>
-                  <span>S1 · 2</span>
-                  <span>N1 · 1</span>
+                  <span class="allocation-chip c1"><strong>C1</strong><em>6</em></span>
+                  <span class="allocation-chip s1"><strong>S1</strong><em>2</em></span>
+                  <span class="allocation-chip n1"><strong>N1</strong><em>1</em></span>
                 </div>
               </article>
 
@@ -448,9 +446,9 @@
                 <p>Metrics ingestion and service health</p>
 
                 <div class="allocation-tags">
-                  <span>C1 · 8</span>
-                  <span>S1 · 4</span>
-                  <span>N1 · 2</span>
+                  <span class="allocation-chip c1"><strong>C1</strong><em>8</em></span>
+                  <span class="allocation-chip s1"><strong>S1</strong><em>4</em></span>
+                  <span class="allocation-chip n1"><strong>N1</strong><em>2</em></span>
                 </div>
               </article>
             </div>
@@ -465,10 +463,18 @@
             <div class="layer-heading">
               <div>
                 <span class="layer-index">02</span>
-                <h2>Resource Classes</h2>
+                <h2>Resources</h2>
               </div>
 
-              <span class="layer-summary">standardized capacity</span>
+              <div class="layer-actions">
+                <button
+                  id="add-resource-button"
+                  class="button secondary"
+                  type="button"
+                >
+                  Add resource
+                </button>
+              </div>
             </div>
 
             <div class="resource-class-grid">
