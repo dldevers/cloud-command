@@ -1,8 +1,8 @@
-# CloudPortal Roadmap
+# CloudCommand Roadmap
 
 ## Phase 1: Architecture Baseline
 
-- Define the CloudPortal purpose and boundaries
+- Define the CloudCommand purpose and boundaries
 - Establish the Resource Model
 - Define the conceptual provider interface
 - Record foundational architecture decisions
@@ -36,7 +36,7 @@ Demonstrate an end-to-end workflow:
 4. Select the Kubernetes provider.
 5. Apply the workload.
 6. Observe provider state.
-7. Report status through CloudPortal.
+7. Report status through CloudCommand.
 
 ## Phase 5: Operational Interface
 
@@ -55,4 +55,4 @@ Demonstrate an end-to-end workflow:
 
 ## Near-Term Definition of Done
 
-The initial proof of concept is complete when an application can request a provider-neutral resource bundle and CloudPortal can satisfy it through Kubernetes without exposing Kubernetes as the application contract.
+The initial proof of concept is complete when an application can request a provider-neutral resource bundle and CloudCommand can satisfy it through Kubernetes without exposing Kubernetes as the application contract.

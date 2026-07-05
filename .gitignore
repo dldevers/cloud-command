@@ -5,7 +5,7 @@ dist/
 coverage/
 
 # CloudCommand runtime data
-portal/api/data/
+control-plane/api/data/
 
 # Local backup files
 *.old-dashboard

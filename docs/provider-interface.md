@@ -2,9 +2,9 @@
 
 ## Purpose
 
-The provider interface separates CloudPortal's resource model from infrastructure-specific implementation logic.
+The provider interface separates CloudCommand's resource model from infrastructure-specific implementation logic.
 
-A provider receives normalized CloudPortal requests and translates them into operations against an infrastructure platform.
+A provider receives normalized CloudCommand requests and translates them into operations against an infrastructure platform.
 
 ## Provider Responsibilities
 
