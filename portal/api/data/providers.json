@@ -1,0 +1,25 @@
+[
+  {
+    "id": "lacasa-k8s",
+    "uid": "d2a53fb0-fe6a-4534-ae08-bb20fa39a5a4",
+    "name": "LaCasa k8s",
+    "type": "kubernetes",
+    "environment": "local",
+    "location": "Melaque Lab",
+    "description": "Three-node Kubernetes resource provider.",
+    "connectionMode": "local-kubeconfig",
+    "connectionStatus": "connected",
+    "status": "healthy",
+    "createdAt": "2026-07-05T17:11:09.935Z",
+    "lastDiscoveredAt": "2026-07-05T17:11:09.935Z",
+    "summary": {
+      "nodes": 3,
+      "readyNodes": 3
+    },
+    "capabilities": {
+      "compute": true,
+      "storage": true,
+      "network": true
+    }
+  }
+]
