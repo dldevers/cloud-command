@@ -1,0 +1,25 @@
+[
+  {
+    "id": "lacasa-k8s",
+    "uid": "5f730d5b-5cab-4be6-9064-ed129776c9ad",
+    "name": "LaCasa K8s",
+    "type": "kubernetes",
+    "environment": "development",
+    "location": "Melaque Lab",
+    "description": "Three-node Kubernetes test cluster running in local UTM virtual machines.",
+    "connectionMode": "local-kubeconfig",
+    "connectionStatus": "connected",
+    "status": "healthy",
+    "createdAt": "2026-07-03T14:24:40.133Z",
+    "lastDiscoveredAt": "2026-07-03T14:24:40.132Z",
+    "summary": {
+      "nodes": 3,
+      "readyNodes": 3
+    },
+    "capabilities": {
+      "compute": true,
+      "storage": true,
+      "network": true
+    }
+  }
+]
