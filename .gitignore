@@ -9,3 +9,7 @@ portal/api/data/
 
 # Local backup files
 *.old-dashboard
+
+# Python
+__pycache__/
+*.py[cod]
