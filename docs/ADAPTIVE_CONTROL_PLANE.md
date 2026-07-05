@@ -236,3 +236,34 @@ Intent starts the model.
 Observation corrects the model.
 
 Policy guides the action.
+
+## Migration Strategy
+
+Migration is not just moving a Runtime Container.
+
+Migration is preparing a valid mirror, proving it works, then cutting over safely.
+
+CloudCommand should model migration as a staged control-plane process, not a single provider operation.
+
+A mature migration flow may include:
+
+1. Prepare target Resource Provider
+2. Create Mirrored Runtime Containers
+3. Sync configuration and state
+4. Validate target health
+5. Optionally mirror traffic
+6. Compare source and target behavior
+7. Cut over active placement
+8. Monitor post-cutover state
+9. Retire source Runtime Containers when safe
+
+This mirrors established enterprise deployment practices such as staged deployment, blue-green deployment, canary release, and controlled cutover, but expresses them through CloudCommand control-plane language.
+
+## Mirrored Runtime Containers
+
+A Mirrored Runtime Container is a temporary Runtime Container created on a target Resource Provider to mirror the state, configuration, profile, and expected behavior of an existing Runtime Container before migration or cutover.
+
+CloudCommand may use Mirrored Runtime Containers to prepare, validate, and compare target placements before migration cutover.
+
+CloudCommand migrations are staged cutovers, not blind moves.
+
