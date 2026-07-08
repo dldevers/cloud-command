@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CloudCommand Control Plane WEB16</title>
+  <link rel="stylesheet" href="./assets/css/web16.css" />
+</head>
+<body>
+  <main class="control-plane" data-rev="WEB16">
+    <header class="top-shell">
+      <div class="brand-mark" aria-label="CloudCommand">
+        <img class="cloudcommand-logo" src="./assets/img/cloudcommand-mark.svg" alt="CloudCommand" />
+      </div>
+
+      <div class="clock" id="clock">--:-- --</div>
+
+      <div class="revision">REV WEB16</div>
+    </header>
+
+    <section class="layer layer-applications" data-layer="applications">
+      <header class="layer-bar">
+        <h2>Applications</h2>
+
+        <div class="layer-actions">
+          <span class="info-bar">3 running</span>
+          <button type="button">Add application</button>
+        </div>
+      </header>
+
+      <div class="object-row">
+        <article class="object-unit">
+          <div class="object-content">
+            <div class="object-title">
+              <span class="status-dot"></span>
+              CloudCommand Core
+            </div>
+            <p>control plane service</p>
+            <p>resources: 6 bound</p>
+          </div>
+          <div class="segmented-gauge" data-used="11" data-total="16"></div>
+        </article>
+
+        <article class="object-unit">
+          <div class="object-content">
+            <div class="object-title">
+              <span class="status-dot"></span>
+              CloudCommand API
+            </div>
+            <p>API gateway</p>
+            <p>resources: 7 bound</p>
+          </div>
+          <div class="segmented-gauge" data-used="12" data-total="16"></div>
+        </article>
+
+        <article class="object-unit">
+          <div class="object-content">
+            <div class="object-title">
+              <span class="status-dot"></span>
+              Billing API
+            </div>
+            <p>service endpoint</p>
+            <p>resources: 4 bound</p>
+          </div>
+          <div class="segmented-gauge" data-used="8" data-total="16"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="layer layer-resources" data-layer="resources">
+      <header class="layer-bar">
+        <h2>Resources</h2>
+
+        <div class="layer-actions">
+          <span class="info-bar">classes and objects</span>
+          <button type="button">Add resource</button>
+        </div>
+      </header>
+
+      <div class="object-row">
+        <article class="object-unit">
+          <div class="object-content">
+            <div class="object-title">compute.workload</div>
+            <p>mapped: kubernetes/deployment</p>
+            <p>health: passing</p>
+          </div>
+          <div class="segmented-gauge" data-used="13" data-total="16"></div>
+        </article>
+
+        <article class="object-unit">
+          <div class="object-content">
+            <div class="object-title">network.service</div>
+            <p>mapped: kubernetes/service</p>
+            <p>health: passing</p>
+          </div>
+          <div class="segmented-gauge" data-used="10" data-total="16"></div>
+        </article>
+
+        <article class="object-unit">
+          <div class="object-content">
+            <div class="object-title">runtime.secret</div>
+            <p>mapped: kubernetes/secret</p>
+            <p>health: watched</p>
+          </div>
+          <div class="segmented-gauge" data-used="6" data-total="16"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="layer layer-providers" data-layer="providers">
+      <header class="layer-bar">
+        <h2>Providers</h2>
+
+        <div class="layer-actions">
+          <span class="info-bar">backing systems</span>
+          <button type="button">Add provider</button>
+        </div>
+      </header>
+
+      <div class="object-row">
+        <article class="object-unit">
+          <div class="object-content">
+            <div class="object-title">LaCasa K8s</div>
+            <p>provider: registered</p>
+            <p>state: registered</p>
+          </div>
+          <div class="segmented-gauge" data-used="11" data-total="16"></div>
+        </article>
+
+        <article class="object-unit">
+          <div class="object-content">
+            <div class="object-title">runtime.agent</div>
+            <p>mode: evidence only</p>
+            <p>state: listening</p>
+          </div>
+          <div class="segmented-gauge" data-used="9" data-total="16"></div>
+        </article>
+
+        <article class="object-unit">
+          <div class="object-content">
+            <div class="object-title">cloudcommand.core</div>
+            <p>policy: active</p>
+            <p>decisions: local</p>
+          </div>
+          <div class="segmented-gauge" data-used="12" data-total="16"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="console-window" id="consoleWindow" aria-label="CloudCommand console output">
+      <header class="console-titlebar" id="consoleDragHandle">
+        <div class="console-window-controls">
+          <button class="window-control close" id="consoleClose" type="button" aria-label="Close console">×</button>
+          <button class="window-control minimize" id="consoleMinimize" type="button" aria-label="Minimize console">−</button>
+          <button class="window-control maximize" id="consoleMaximize" type="button" aria-label="Maximize console">□</button>
+        </div>
+        <div class="console-title">CloudCommand Console</div>
+        <div class="console-size">120 × 24</div>
+      </header>
+
+      <div class="console-screen" id="consoleScreen">
+        <div class="console-line muted">CloudCommand command surface ready.</div>
+        <div class="console-line active"><span class="console-prefix">cloud-command</span><span id="consoleMirror"></span><span class="console-cursor"></span></div>
+      </div>
+    </section>
+
+    <footer class="command-bar">
+      <img class="command-logo" src="./assets/img/cloudcommand-mark.svg" alt="CloudCommand" />
+      <div class="command-input-wrap">
+        <span class="command-prefix">cloud-command</span>
+        <input
+          id="commandInput"
+          class="command-input"
+          type="text"
+          value=""
+          spellcheck="false"
+          autocomplete="off"
+          aria-label="CloudCommand console input"
+        />
+      </div>
+      <span class="command-state">ready</span>
+    </footer>
+  </main>
+
+  <script src="./assets/js/web10.js"></script>
+</body>
+</html>
