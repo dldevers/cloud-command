@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en" data-rev="NVY01">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CloudCommand Glass Test</title>
+
+  <style>
+    :root {
+      --rev: "NVY01";
+
+      --bg: #020711;
+      --panel-bg: rgba(3, 13, 24, 0.78);
+      --panel-bg-soft: rgba(5, 20, 34, 0.66);
+
+      --line: rgba(92, 174, 230, 0.28);
+      --line-soft: rgba(92, 174, 230, 0.14);
+      --line-faint: rgba(92, 174, 230, 0.08);
+
+      --object-bg: rgba(3, 12, 22, 0.64);
+      --object-border: rgba(92, 174, 230, 0.22);
+
+      --app: 116, 198, 255;
+      --resources: 105, 226, 176;
+      --providers: 184, 164, 255;
+
+      --text: rgba(226, 241, 250, 0.84);
+      --muted: rgba(160, 184, 202, 0.62);
+
+      --mono: Monaco, "Cascadia Mono", "Cascadia Code", Menlo, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+    }
+
+    body {
+      min-height: 800px;
+    }
+
+    .viewport {
+      width: 100vw;
+      height: 100vh;
+      min-height: 800px;
+      padding: 10px;
+      background: var(--bg);
+    }
+
+    .console {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+
+      border: 1px solid rgba(126, 205, 255, 0.22);
+
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.014) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.010) 1px, transparent 1px),
+        #020711;
+      background-size: 24px 24px, 24px 24px, auto;
+
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.012) inset,
+        0 20px 70px rgba(0, 0, 0, 0.75);
+    }
+
+    .mark {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 28px;
+      height: 28px;
+      opacity: 0.94;
+      pointer-events: none;
+    }
+
+    .clock {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+
+      height: 24px;
+      min-width: 112px;
+      padding: 0 14px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 1px solid rgba(126, 205, 255, 0.18);
+      background: rgba(0, 0, 0, 0.74);
+
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      color: rgba(237, 245, 251, 0.92);
+    }
+
+    .revision-tag {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      height: 24px;
+      min-width: 72px;
+      padding: 0 10px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-left: 1px solid rgba(126, 205, 255, 0.16);
+      border-bottom: 1px solid rgba(126, 205, 255, 0.16);
+      background: rgba(0, 0, 0, 0.62);
+
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: rgba(255, 255, 255, 0.78);
+
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .revision-tag::before {
+      content: "REV ";
+      color: rgba(126, 205, 255, 0.48);
+    }
+
+    .panel-stack {
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      top: 70px;
+      bottom: 58px;
+
+      display: grid;
+      grid-template-rows: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .layer-panel {
+      min-height: 0;
+      overflow: hidden;
+
+      border-radius: 0;
+      border: 1px solid var(--line);
+      background: var(--panel-bg);
+
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.024) inset,
+        0 0 0 1px rgba(255, 255, 255, 0.008) inset,
+        0 0 26px rgba(92, 174, 230, 0.018) inset,
+        0 14px 34px rgba(0, 0, 0, 0.18);
+    }
+
+    .layer-content {
+      height: 100%;
+      display: grid;
+      grid-template-rows: 36px 1fr;
+      min-height: 0;
+    }
+
+    .layer-label-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+
+      padding: 0 22px;
+      border-bottom: 1px solid var(--line-soft);
+      background: rgba(7, 25, 40, 0.26);
+    }
+
+    .layer-label {
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      color: rgba(226, 241, 250, 0.84);
+    }
+
+    .layer-meta {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(126, 205, 255, 0.55);
+    }
+
+    .object-row {
+      min-height: 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+
+      padding: 14px 22px 18px;
+
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+    }
+
+    .object-row::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+
+    .object-unit {
+      position: relative;
+
+      flex: 0 0 31.7%;
+      min-width: 275px;
+      min-height: 112px;
+
+      padding: 16px 18px;
+
+      border: 1px solid var(--object-border);
+      border-radius: 6px;
+
+      background: var(--object-bg);
+
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.035) inset,
+        0 10px 24px rgba(0, 0, 0, 0.18);
+
+      overflow: hidden;
+    }
+
+    .object-unit::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.10);
+      opacity: 0.5;
+    }
+
+    .object-title {
+      position: relative;
+      z-index: 1;
+
+      font-size: 14px;
+      letter-spacing: 0.035em;
+      margin-bottom: 10px;
+
+      color: rgba(232, 247, 255, 0.88);
+    }
+
+    .applications .object-title {
+      color: color-mix(in srgb, rgb(var(--app)) 72%, white 28%);
+    }
+
+    .resources .object-title {
+      color: color-mix(in srgb, rgb(var(--resources)) 72%, white 28%);
+    }
+
+    .providers .object-title {
+      color: color-mix(in srgb, rgb(var(--providers)) 72%, white 28%);
+    }
+
+    .object-line {
+      position: relative;
+      z-index: 1;
+
+      font-size: 11px;
+      line-height: 1.55;
+      letter-spacing: 0.02em;
+      color: var(--muted);
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      margin-right: 8px;
+      background: rgba(86, 240, 163, 0.95);
+      box-shadow: 0 0 12px rgba(86, 240, 163, 0.55);
+      vertical-align: 1px;
+    }
+
+    .command-strip {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 48px;
+
+      display: grid;
+      grid-template-columns: 140px 1fr 190px;
+      align-items: center;
+      padding: 0 16px;
+
+      border-top: 1px solid rgba(126, 205, 255, 0.13);
+      background: rgba(2, 8, 16, 0.46);
+
+      font-size: 12px;
+      color: rgba(230, 248, 255, 0.78);
+    }
+
+    .prompt-label {
+      color: rgba(126, 205, 255, 0.72);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+
+    .prompt::before {
+      content: "cloud-command";
+      color: rgba(86, 240, 163, 0.78);
+    }
+
+    .prompt::after {
+      content: " inspect layers";
+      color: rgba(230, 248, 255, 0.82);
+    }
+  
+    /* Revision note: small frosted glass pane test */
+    .revision-note {
+      position: absolute !important;
+      top: 28px !important;
+      right: 0 !important;
+
+      max-width: 260px !important;
+      min-width: 180px !important;
+      padding: 6px 8px !important;
+
+      border-left: 1px solid rgba(255, 255, 255, 0.22) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
+      border-bottom-left-radius: 8px !important;
+
+      background: rgba(245, 250, 255, 0.085) !important;
+
+      backdrop-filter: blur(22px) saturate(130%) brightness(1.16) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(130%) brightness(1.16) !important;
+
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.16) inset,
+        1px 0 0 rgba(255, 255, 255, 0.06) inset,
+        0 10px 22px rgba(0, 0, 0, 0.22) !important;
+
+      font-size: 8px !important;
+      line-height: 1.35 !important;
+      letter-spacing: 0.06em !important;
+      text-transform: none !important;
+      color: rgba(255, 255, 255, 0.82) !important;
+
+      white-space: normal !important;
+      pointer-events: none !important;
+      z-index: 12 !important;
+    }
+
+  </style>
+  <link id="revisionStylesheet" rel="stylesheet" href="" />
+</head>
+
+<body>
+  <div class="viewport">
+    <main class="console">
+      <img class="mark" src="./assets/logo-cloudcommand.svg" alt="" />
+      <div class="clock" id="clock">--:--:--</div>
+      <div class="revision-tag" id="revisionTag">NVY01</div>
+      <div class="revision-note" id="revisionNote">baseline</div>
+
+      <section class="panel-stack">
+        <section class="layer-panel applications" data-panel="applications">
+          <div class="layer-content">
+            <div class="layer-label-row">
+              <div class="layer-label">Applications</div>
+              <div class="layer-meta">3 running</div>
+            </div>
+
+            <div class="object-row">
+              <article class="object-unit" data-object="cloudcommand-core">
+                <div class="object-title"><span class="status-dot"></span>CloudCommand Core</div>
+                <div class="object-line">control plane service</div>
+                <div class="object-line">resources: 6 bound</div>
+              </article>
+
+              <article class="object-unit" data-object="cloudcommand-api">
+                <div class="object-title"><span class="status-dot"></span>CloudCommand API</div>
+                <div class="object-line">API gateway</div>
+                <div class="object-line">resources: 7 bound</div>
+              </article>
+
+              <article class="object-unit" data-object="billing-api">
+                <div class="object-title"><span class="status-dot"></span>Billing API</div>
+                <div class="object-line">service endpoint</div>
+                <div class="object-line">resources: 4 bound</div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="layer-panel resources" data-panel="resources">
+          <div class="layer-content">
+            <div class="layer-label-row">
+              <div class="layer-label">Resources</div>
+              <div class="layer-meta">classes and objects</div>
+            </div>
+
+            <div class="object-row">
+              <article class="object-unit" data-object="compute-workload">
+                <div class="object-title">compute.workload</div>
+                <div class="object-line">mapped: kubernetes/deployment</div>
+                <div class="object-line">health: passing</div>
+              </article>
+
+              <article class="object-unit" data-object="network-service">
+                <div class="object-title">network.service</div>
+                <div class="object-line">mapped: kubernetes/service</div>
+                <div class="object-line">health: passing</div>
+              </article>
+
+              <article class="object-unit" data-object="runtime-secret">
+                <div class="object-title">runtime.secret</div>
+                <div class="object-line">mapped: kubernetes/secret</div>
+                <div class="object-line">health: watched</div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="layer-panel providers" data-panel="providers">
+          <div class="layer-content">
+            <div class="layer-label-row">
+              <div class="layer-label">Providers</div>
+              <div class="layer-meta">backing systems</div>
+            </div>
+
+            <div class="object-row">
+              <article class="object-unit" data-object="kubernetes-local">
+                <div class="object-title">kubernetes.local</div>
+                <div class="object-line">provider: local</div>
+                <div class="object-line">state: reachable</div>
+              </article>
+
+              <article class="object-unit" data-object="runtime-agent">
+                <div class="object-title">runtime.agent</div>
+                <div class="object-line">mode: evidence only</div>
+                <div class="object-line">state: listening</div>
+              </article>
+
+              <article class="object-unit" data-object="cloudcommand-core-provider">
+                <div class="object-title">cloudcommand.core</div>
+                <div class="object-line">policy: active</div>
+                <div class="object-line">decisions: local</div>
+              </article>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <footer class="command-strip">
+        <div class="prompt-label">command</div>
+        <div class="prompt"></div>
+        <div>ready</div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    const REVISION_NOTES = {
+      NVY01: "baseline dark console, restrained blue structure",
+      NVY02: "transparent object test, external revision CSS",
+      NVY03: "80% transparent objects with warm backlight",
+      NVY04: "frosted object test with stronger white tint",
+      NVY05: "obvious frosted-glass proof test for object units"
+    };
+
+    const REVISIONS = {
+      NVY01: {
+        "--panel-bg": "rgba(3, 13, 24, 0.78)",
+        "--panel-bg-soft": "rgba(5, 20, 34, 0.66)",
+        "--line": "rgba(92, 174, 230, 0.28)",
+        "--line-soft": "rgba(92, 174, 230, 0.14)",
+        "--object-bg": "rgba(3, 12, 22, 0.64)",
+        "--object-border": "rgba(92, 174, 230, 0.22)"
+      }
+    };
+
+    function applyRevision() {
+      const params = new URLSearchParams(window.location.search);
+      const rev = params.get("rev") || "NVY01";
+
+      const revisionTag = document.getElementById("revisionTag");
+      if (revisionTag) revisionTag.textContent = rev;
+
+      const revisionNote = document.getElementById("revisionNote");
+      if (revisionNote) {
+        const notes = {
+          NVY01: "baseline dark console, restrained blue structure",
+          NVY02: "transparent object test, external revision CSS",
+          NVY03: "80% transparent objects with warm backlight",
+          NVY04: "frosted object test with stronger white tint",
+          NVY05: "obvious frosted-glass proof test for object units"
+        };
+
+        revisionNote.textContent = notes[rev] || "unknown visual revision";
+      }
+
+      const link = document.getElementById("revisionStylesheet");
+      if (link) {
+        link.href = `./assets/css/revisions/${rev}.css?stamp=${Date.now()}`;
+      }
+
+      console.log("CloudCommand visual revision loaded:", rev);
+    }
+
+    function updateClock() {
+      const el = document.getElementById("clock");
+      const now = new Date();
+
+      el.textContent = new Intl.DateTimeFormat("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      }).format(now);
+    }
+
+    applyRevision();
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>

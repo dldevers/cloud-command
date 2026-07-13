@@ -1,0 +1,99 @@
+/*
+  CloudCommand visual revision: NVY02
+  Focus: object-unit glass experiment
+
+  Baseline:
+  - dark midnight console
+  - fixed three-panel layer view
+  - object units attempt pure transparent glass
+*/
+
+:root {
+  --info-text: rgba(160, 184, 202, 0.62);
+  --info-text-strong: rgba(190, 214, 230, 0.72);
+  --glass-edge-white: rgba(255, 255, 255, 0.18);
+  --glass-edge-blue: rgba(126, 205, 255, 0.18);
+}
+
+/* Use the informational text color consistently. */
+.object-line,
+.layer-meta {
+  color: var(--info-text) !important;
+}
+
+.layer-label {
+  color: var(--info-text-strong) !important;
+}
+
+/*
+  Object glass test:
+  100% transparent body fill.
+  The object is defined only by edge highlights, blur/refraction, and shadow.
+*/
+.object-unit {
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
+
+  border: 1px solid var(--glass-edge-blue) !important;
+  border-radius: 7px !important;
+
+  backdrop-filter: blur(22px) saturate(118%) brightness(1.16) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(118%) brightness(1.16) !important;
+
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.090) inset,
+    1px 0 0 rgba(255, 255, 255, 0.024) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.16) inset,
+    0 14px 26px rgba(0, 0, 0, 0.16) !important;
+
+  transform: translateY(-1px);
+}
+
+/* Top glass sheen. */
+.object-unit::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 1px !important;
+  border-radius: 6px !important;
+  pointer-events: none !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.075),
+      rgba(255, 255, 255, 0.014) 34%,
+      transparent 70%
+    ),
+    linear-gradient(
+      105deg,
+      rgba(255, 255, 255, 0.045),
+      transparent 24%
+    ) !important;
+
+  opacity: 0.42 !important;
+}
+
+/* Short top glint, not a full card border. */
+.object-unit::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 42% !important;
+  height: 1px !important;
+  background: rgba(255, 255, 255, 0.18) !important;
+  opacity: 0.48 !important;
+  pointer-events: none !important;
+}
+
+/* Slight hover float so it feels like glass above the panel. */
+.object-unit:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.28) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    1px 0 0 rgba(255, 255, 255, 0.032) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.16) inset,
+    0 18px 34px rgba(0, 0, 0, 0.22) !important;
+}

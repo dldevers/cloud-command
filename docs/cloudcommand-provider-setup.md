@@ -32,7 +32,7 @@ A healthy three-node cluster should show one control-plane node and two worker n
 From the repository root, start the CloudCommand API:
 
 ```bash
-cd portal/api
+cd control-plane/api
 npm install
 npm start
 ```
@@ -244,7 +244,7 @@ Healthy
 Confirm that the API is running:
 
 ```bash
-cd portal/api
+cd control-plane/api
 npm start
 ```
 

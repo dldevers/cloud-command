@@ -1,0 +1,28 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 64 64"
+  role="img"
+  aria-labelledby="title desc"
+>
+  <title id="title">CloudCommand logo mark</title>
+  <desc id="desc">A simple cloud outline with a command prompt symbol.</desc>
+
+  <g
+    fill="none"
+    stroke="#a78bfa"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path
+      d="M20 39h27a11 11 0 0 0 1-22
+         16 16 0 0 0-30-4
+         13 13 0 0 0 2 26Z"
+      stroke-width="5"
+    />
+
+    <path
+      d="m18 48 7 6-7 6M31 60h13"
+      stroke-width="4"
+    />
+  </g>
+</svg>

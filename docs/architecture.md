@@ -1,10 +1,10 @@
-# CloudPortal Architecture
+# CloudCommand Architecture
 
 ## Purpose
 
-CloudPortal provides a stable operational interface between applications and infrastructure providers.
+CloudCommand provides a stable operational interface between applications and infrastructure providers.
 
-Applications describe the capacity and operational behavior they require. CloudPortal determines how a provider should satisfy that request.
+Applications describe the capacity and operational behavior they require. CloudCommand determines how a provider should satisfy that request.
 
 This separation allows infrastructure implementations to change without requiring application teams to redesign their deployment model.
 
@@ -22,7 +22,7 @@ Applications do not select:
 - Provider-specific storage products
 - Provider-specific network implementations
 
-### CloudPortal Control Plane
+### CloudCommand Control Plane
 
 The control plane is responsible for:
 
@@ -37,7 +37,7 @@ The control plane is responsible for:
 
 ### Provider Layer
 
-Providers translate CloudPortal resource requests into provider-specific operations.
+Providers translate CloudCommand resource requests into provider-specific operations.
 
 Examples may include:
 
@@ -61,29 +61,29 @@ The infrastructure layer contains the actual implementation resources:
 - Network equipment
 - Managed cloud services
 
-CloudPortal does not expose these implementation details as the primary application interface.
+CloudCommand does not expose these implementation details as the primary application interface.
 
 ## Desired-State Flow
 
-A basic CloudPortal operation follows this sequence:
+A basic CloudCommand operation follows this sequence:
 
 1. An application submits a resource request.
-2. CloudPortal validates the request.
-3. CloudPortal resolves the requested Resource Classes.
-4. CloudPortal selects an eligible provider.
+2. CloudCommand validates the request.
+3. CloudCommand resolves the requested Resource Classes.
+4. CloudCommand selects an eligible provider.
 5. The provider translates the request into implementation-specific operations.
 6. The provider reconciles the requested state.
-7. CloudPortal records and reports observed state.
+7. CloudCommand records and reports observed state.
 
 ## Initial Vertical Slice
 
 The first implementation will prove the architecture using one workload and one Kubernetes-backed provider.
 
-The goal is not to build a complete portal immediately. The goal is to prove that an application can request capacity without depending directly on Kubernetes concepts.
+The goal is not to build a complete control plane immediately. The goal is to prove that an application can request capacity without depending directly on Kubernetes concepts.
 
 ## Architectural Boundaries
 
-CloudPortal owns:
+CloudCommand owns:
 
 - Resource Class definitions
 - Provider contracts

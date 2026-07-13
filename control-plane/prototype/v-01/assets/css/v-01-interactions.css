@@ -1,0 +1,175 @@
+:root {
+  --cc-command-height: 28px;
+}
+
+/* Star-map pointer interaction */
+
+.cc-starm-svg,
+.cc-starm-camera-layer,
+.cc-starm-object-layer,
+.cc-starm-object {
+  pointer-events: auto;
+}
+
+.cc-starm-background-layer,
+.cc-starm-relationship-layer {
+  pointer-events: none;
+}
+
+.cc-starm-object {
+  cursor: pointer;
+}
+
+.cc-starm-object-halo {
+  transform-box: fill-box;
+  transform-origin: center;
+
+  transition:
+    stroke 130ms ease,
+    stroke-opacity 130ms ease,
+    filter 130ms ease,
+    transform 130ms ease;
+}
+
+/* Healthy */
+
+.cc-starm-object[data-health="healthy"]:hover
+  .cc-starm-object-halo,
+.cc-starm-object[data-health="healthy"]:focus-visible
+  .cc-starm-object-halo,
+.cc-starm-object[data-health="healthy"].is-focused
+  .cc-starm-object-halo {
+  stroke: #75e6da !important;
+
+  filter:
+    drop-shadow(0 0 5px rgba(117, 230, 218, 0.96))
+    drop-shadow(0 0 14px rgba(117, 230, 218, 0.5)) !important;
+}
+
+/* Warning */
+
+.cc-starm-object[data-health="warning"]:hover
+  .cc-starm-object-halo,
+.cc-starm-object[data-health="warning"]:focus-visible
+  .cc-starm-object-halo,
+.cc-starm-object[data-health="warning"].is-focused
+  .cc-starm-object-halo {
+  stroke: #ffad42 !important;
+
+  filter:
+    drop-shadow(0 0 5px rgba(255, 173, 66, 0.98))
+    drop-shadow(0 0 14px rgba(255, 173, 66, 0.55)) !important;
+}
+
+/* Critical */
+
+.cc-starm-object[data-health="critical"]:hover
+  .cc-starm-object-halo,
+.cc-starm-object[data-health="critical"]:focus-visible
+  .cc-starm-object-halo,
+.cc-starm-object[data-health="critical"].is-focused
+  .cc-starm-object-halo {
+  stroke: #ff4d67 !important;
+
+  filter:
+    drop-shadow(0 0 5px rgba(255, 77, 103, 0.98))
+    drop-shadow(0 0 14px rgba(255, 77, 103, 0.56)) !important;
+}
+
+/* Unknown */
+
+.cc-starm-object[data-health="unknown"]:hover
+  .cc-starm-object-halo,
+.cc-starm-object[data-health="unknown"]:focus-visible
+  .cc-starm-object-halo,
+.cc-starm-object[data-health="unknown"].is-focused
+  .cc-starm-object-halo {
+  stroke: #7f93a8 !important;
+
+  filter:
+    drop-shadow(0 0 5px rgba(127, 147, 168, 0.92))
+    drop-shadow(0 0 14px rgba(127, 147, 168, 0.46)) !important;
+}
+
+/* Shared hover pulse */
+
+.cc-starm-object:hover .cc-starm-object-halo,
+.cc-starm-object:focus-visible .cc-starm-object-halo {
+  stroke-opacity: 0.96;
+  transform: scale(1.18);
+
+  animation:
+    cc-object-hover-pulse
+    480ms
+    ease-out
+    1;
+}
+
+.cc-starm-object.is-focused .cc-starm-object-halo {
+  stroke-opacity: 1;
+  transform: scale(1.24);
+}
+
+@keyframes cc-object-hover-pulse {
+  0% {
+    transform: scale(1);
+    stroke-opacity: 0.32;
+  }
+
+  50% {
+    transform: scale(1.32);
+    stroke-opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.18);
+    stroke-opacity: 0.96;
+  }
+}
+
+/* Compact command line */
+
+.cc-command-input-shell {
+  height: var(--cc-command-height) !important;
+}
+
+.cc-command-input-surface {
+  height: var(--cc-command-height);
+  min-height: var(--cc-command-height);
+
+  padding: 0 8px;
+  gap: 7px;
+}
+
+.cc-command-inline-prompt {
+  font-size: 10px;
+  line-height: 1;
+}
+
+.cc-command-input {
+  height: 14px;
+  min-height: 14px;
+  max-height: 14px;
+
+  font-size: 10px;
+  line-height: 14px;
+}
+
+.cc-command-logo {
+  left: -34px;
+
+  width: 24px;
+  height: 24px;
+}
+
+.cc-command-logo-img {
+  width: 22px;
+  height: 22px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cc-starm-object:hover .cc-starm-object-halo,
+  .cc-starm-object:focus-visible .cc-starm-object-halo {
+    animation: none;
+  }
+}

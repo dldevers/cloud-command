@@ -18,7 +18,7 @@ This creates coupling between applications and technologies such as:
 
 That coupling makes infrastructure migrations, hybrid environments, and provider replacement unnecessarily difficult.
 
-CloudPortal requires a stable application-facing model that can survive changes in infrastructure implementation.
+CloudCommand requires a stable application-facing model that can survive changes in infrastructure implementation.
 
 ## Decision
 
@@ -49,4 +49,4 @@ Providers will map Resource Classes to implementation-specific resources and ope
 
 The initial Kubernetes provider will test this decision.
 
-Kubernetes is the first implementation target, not the CloudPortal application model.
+Kubernetes is the first implementation target, not the CloudCommand application model.

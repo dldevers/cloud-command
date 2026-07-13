@@ -1,0 +1,41 @@
+
+/* WEB16 prefix/input spacing refinement */
+.command-input-wrap {
+  gap: 0;
+}
+
+.command-prefix {
+  color: rgba(73, 215, 104, 0.92);
+  white-space: nowrap;
+  margin-right: 1ch;
+}
+
+.command-input {
+  padding-left: 0;
+}
+
+.console-prefix {
+  color: rgba(73, 215, 104, 0.94);
+  margin-right: 1ch;
+}
+CSScat >> assets/css/web16.css <<'CSS'
+
+/* WEB16 prefix/input spacing refinement */
+.command-input-wrap {
+  gap: 0;
+}
+
+.command-prefix {
+  color: rgba(73, 215, 104, 0.92);
+  white-space: nowrap;
+  margin-right: 1ch;
+}
+
+.command-input {
+  padding-left: 0;
+}
+
+.console-prefix {
+  color: rgba(73, 215, 104, 0.94);
+  margin-right: 1ch;
+}

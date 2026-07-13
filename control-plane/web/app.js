@@ -7,6 +7,7 @@ const views = {
   loading: $('#loading-view'),
   onboarding: $('#onboarding-view'),
   providers: $('#providers-view'),
+  dashboard: $('#dashboard-view'),
   detail: $('#provider-detail-view'),
 };
 

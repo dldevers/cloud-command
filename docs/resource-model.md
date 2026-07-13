@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Resource Model is the foundation of CloudPortal.
+The Resource Model is the foundation of CloudCommand.
 
 Applications request Resource Classes. Providers satisfy those classes.
 
