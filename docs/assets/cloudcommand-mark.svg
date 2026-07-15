@@ -1,4 +1,4 @@
-<svg color="#ffffff"
+<svg
   xmlns="http://www.w3.org/2000/svg"
   viewBox="0 0 64 64"
   role="img"
@@ -7,9 +7,21 @@
   <title id="title">CloudCommand logo mark</title>
   <desc id="desc">A simple cloud outline with a command prompt symbol.</desc>
 
+  <style>
+    .cloudcommand-mark {
+      stroke: #10283a;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .cloudcommand-mark {
+        stroke: #e8fbff;
+      }
+    }
+  </style>
+
   <g
+    class="cloudcommand-mark"
     fill="none"
-    stroke="#ffffff"
     stroke-linecap="round"
     stroke-linejoin="round"
   >

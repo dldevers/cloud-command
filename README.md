@@ -1,293 +1,252 @@
 <p align="center">
-  <img src="docs/assets/logo-cloudcommand.png"
-       alt="CloudCommand"
-       width="800">
+  <img src="docs/assets/cloudcommand-mark.svg" alt="CloudCommand mark" width="112">
 </p>
 
-# CloudCommand
-## Screenshots
+<h1 align="center">CloudCommand</h1>
 
-### Dashboard 
+<p align="center">
+  <strong>A provider-independent fleet control plane for autonomous Kubernetes clusters.</strong>
+</p>
 
-![CloudCommand resource providers dashboard](docs/assets/screenshots/dashboard-cloudcommand.png)
+<p align="center">
+  Public cloud · private cloud · on-premises · edge · home lab
+</p>
 
-### Kubernetes Provider Registration
+> Kubernetes made a cluster declarative. CloudCommand makes a fleet of
+> autonomous clusters declarative.
 
-![CloudCommand Kubernetes provider registration workflow](docs/assets/screenshots/provider-registration-wizard.png)
+CloudCommand is being built to coordinate global intent, placement, policy,
+evidence, approvals, provider execution, verification, rollback, and audit
+across independent Kubernetes clusters—without stretching one cluster or trust
+boundary across unreliable networks.
 
-### Provider Discovery
+The project is an early working implementation and active systems-design
+project. It is not production-ready.
 
-![CloudCommand provider discovery results](docs/assets/screenshots/provider-discovery-results.png)
+## Interface prototype
 
-**A provider-independent operations platform for deploying and managing workloads across heterogeneous infrastructure.**
+![CloudCommand spatial fleet control plane showing a critical application inspection](docs/assets/screenshots/cloudcommand-star-map-prototype.jpg)
 
-CloudCommand provides a consistent operational interface for infrastructure that may be implemented using:
+<p align="center"><em>Current spatial control-plane prototype with the payments application in a critical state and its diagnostic inspection open. Displayed operational data is simulated.</em></p>
 
-- Virtual machines
-- Bare-metal systems
-- Kubernetes clusters
-- Public cloud services
-- Private cloud infrastructure
-- Future infrastructure providers
+## The problem
 
-The central principle is simple:
+Kubernetes standardizes orchestration inside a cluster. Operating a fleet still
+requires teams to connect provider APIs, GitOps systems, policy, identity,
+approvals, health evidence, incident response, and recovery workflows across
+many independent failure domains.
 
-> Applications should request capacity—not hardware.
+CloudCommand's goal is to give an organization's SRE practice one control plane
+across that fleet. It abstracts provider mechanics, not physical truth, and it
+keeps the underlying systems visible to the operator.
 
-Applications should not need to know whether their requested capacity is provided by a virtual machine, a Kubernetes cluster, a physical server, or a managed cloud service.
+It is not intended to be:
 
-Those implementation details belong to the provider layer.
+- a multi-kubeconfig wrapper
+- a generic infrastructure dashboard
+- one Kubernetes control plane stretched across distant sites
+- a replacement for GitOps, CI/CD, or an organization's change process
+- an AI agent with unrestricted provider credentials
 
----
+## Fleet model
 
-## Project Purpose
+Each site retains an independent Kubernetes control plane, local reconciliation,
+and its own failure boundary.
 
-CloudCommand is an infrastructure operations platform designed to separate application requirements from infrastructure implementation.
+```text
+Git: global desired intent
+          |
+CloudCommand: fleet policy, placement, governance, and recovery
+          |
+Independent Kubernetes clusters: local reconciliation and autonomy
+          |
+Workloads and local provider resources
+```
 
-Instead of requiring applications or operators to request specific machines, instance types, or hardware configurations, CloudCommand allows them to request standardized **Resource Classes**.
+A disconnected site continues running from its last accepted intent. When
+connectivity returns, CloudCommand should discover the revision gap and perform
+bounded, policy-controlled, auditable reconciliation.
 
-Infrastructure providers are then responsible for satisfying those requests.
+Correctness means local convergence toward globally declared intent—not
+instantaneous global consistency.
 
-This makes it possible to deploy workloads consistently across different environments without requiring the workload to understand the underlying infrastructure.
+## Operational model
 
-- A Google GKE workload
-- Another compatible provider
+The target workflow separates observation, authorization, execution, and
+verification:
 
-The application does not need to change when the provider changes.
+```text
+observe desired and current state
+              |
+produce evidence and a proposed plan
+              |
+evaluate deterministic policy and approval
+              |
+stage an immutable ChangeRequest
+              |
+customer-controlled GitOps / CI/CD executes
+              |
+verify health, retain rollback data, close audit
+```
 
----
+CloudCommand should not hold persistent fleet-wide administrative credentials.
+The design favors scoped per-cluster identities, delegated RBAC, short-lived
+credentials, outbound cluster-local agents, explicit blast-radius boundaries,
+and customer-controlled execution.
 
-## Provider Architecture
+## What exists today
 
-CloudCommand treats infrastructure environments as providers.
+| Area | Current state |
+|---|---|
+| Bootstrap CLI | Python bootstrap, status, doctor, local state initialization, and Kubernetes discovery |
+| Kubernetes adapter | Node.js API for testing, registering, listing, and inspecting a Kubernetes provider through local kubeconfig or in-cluster identity |
+| Provider UI | Browser workflow connected to the API for provider registration, discovery, and inspection |
+| Spatial control plane | Interactive star-map prototype with pan, zoom, focus, status, console, and inspector experiments |
+| Reference environment | Reproducible Kubernetes lab guides and bootstrap scripts for commodity hardware and UTM virtual machines |
+| Architecture | Provider interface, Resource Class, adaptive-control-plane, bootstrap, fleet, and safety design documentation |
 
-A provider advertises the Resource Classes it can satisfy and exposes standardized operational capabilities to the platform.
+The current implementation persists bootstrap and provider state in JSON. The
+authoritative structured event stream, immutable audit model, approval routing,
+outbound fleet agents, GitOps reconciliation, cross-cluster promotion, and
+autopilot leases are design or roadmap work.
 
-Possible providers include:
+## Current implementation boundary
 
-- Local Kubernetes clusters
-- On-premises virtualization
-- Bare-metal infrastructure
-- Amazon Web Services
-- Microsoft Azure
-- Google Cloud Platform
-- Edge environments
-- Development and testing environments
+```text
+cloudcommand.py
+  └─ host checks, idempotent local bootstrap, kubectl discovery, JSON state
 
-This architecture allows CloudCommand to provide one operational model across multiple infrastructure implementations.
+control-plane/api
+  └─ Express API, Kubernetes client, provider registration and inspection
 
----
+control-plane/web
+  └─ API-connected provider workflow and operational views
 
-## Operational Model
+control-plane/prototype/v-01
+  └─ current static spatial interface prototype
+```
 
-CloudCommand is intended to support the complete lifecycle of infrastructure capacity.
+CloudCommand currently supports one generic Kubernetes provider path. Managed
+cloud lifecycle adapters, fleet reconciliation, service-class enforcement, and
+multi-cluster workload movement have not yet been implemented.
 
-That lifecycle may include:
+## Run the interface prototype
 
-1. Discovering available infrastructure
-2. Registering infrastructure with a provider
-3. Validating provider capabilities
-4. Assigning Resource Classes
-5. Promoting capacity into production
-6. Deploying workloads
-7. Monitoring health and availability
-8. Draining or demoting capacity
-9. Removing failed or retired infrastructure
+From the repository root:
 
-Operational procedures are designed to be implemented as standardized, auditable runbooks.
+```bash
+python3 control-plane/prototype/server.py
+```
 
----
+Then open:
 
-## Runbooks
+```text
+http://localhost:8080/v-01/index.html
+```
 
-Runbooks represent controlled operational actions.
+The prototype server uses a local SQLite database for seeded interface data.
+It is a design environment, not the production control-plane architecture.
 
-Examples include:
+## Run the Kubernetes provider API
 
-- Add a node to a Kubernetes cluster
-- Validate a newly discovered worker
-- Promote a node into production
-- Drain a node safely
-- Demote a node from production
-- Replace failed infrastructure
-- Expand cluster capacity
-- Validate provider health
-- Deploy or roll back a workload
+Requirements:
 
-The long-term goal is to expose these runbooks through a simple operational interface while preserving the underlying engineering controls.
+- Node.js and npm
+- access to a safe Kubernetes test cluster
+- a working local kubeconfig, or an in-cluster service identity
 
-Every action should remain:
+```bash
+cd control-plane/api
+npm install
+npm start
+```
 
-- Observable
-- Repeatable
-- Auditable
-- Reversible when possible
-- Independent of a specific infrastructure vendor
+The API listens on `http://localhost:3000` by default. Start with a lab or test
+cluster; do not experiment on production.
 
----
+See [CloudCommand provider setup](docs/cloudcommand-provider-setup.md) for the
+current walkthrough.
 
-## Reference Environment
-
-The initial reference environment uses a small on-premises Kubernetes cluster running on commodity hardware.
-
-The first development environment is built using:
-
-- A base-model Apple Mac Mini with Apple silicon
-- UTM virtual machines
-- Ubuntu Server
-- Kubernetes
-- Containerized workloads
-- Standardized control-plane and worker-node roles
-
-This environment serves as a reproducible provider implementation for developing and testing CloudCommand.
-
-The Mac Mini is not the product.
-
-The Kubernetes cluster is not the product.
-
-They are reference implementations used to prove the provider model.
-
----
-
-## Build the Reference Kubernetes Provider
-
-To build the first CloudCommand Kubernetes environment on a base-model Apple Mac Mini, follow the complete setup guide:
-
-### [Create Your Own Kubernetes Cloud Provider on a Base-Model M4 Mac Mini](docs/utm-mac-mini-setup.md)
-
-The guide covers:
-
-- Installing and configuring UTM
-- Creating Ubuntu Server virtual machines
-- Configuring the Kubernetes control plane
-- Adding worker nodes
-- Installing the container runtime
-- Configuring cluster networking
-- Validating the completed cluster
-- Preparing the environment for CloudCommand
-
----
-
-## Repository Structure
+## Repository map
 
 ```text
 .
-├── .github/
-│   └── workflows/
-├── docs/
-│   └── utm-mac-mini-setup.md
-├── public/
-├── src/
-├── compose.yaml
-├── Dockerfile
-├── package.json
+├── cloudcommand.py                 # early bootstrap agent and CLI
+├── control-plane/
+│   ├── api/                        # Kubernetes provider API
+│   ├── web/                        # API-connected operator interface
+│   └── prototype/                  # spatial UI experiments and v-01
+├── docs/                           # architecture, decisions, and lab guides
+├── scripts/                        # Kubernetes bootstrap and node setup
 └── README.md
 ```
 
-### Directory Overview
+## Design principles
 
-| Path | Purpose |
-|---|---|
-| `.github/workflows/` | Continuous integration and repository automation |
-| `docs/` | Installation guides, architecture notes, and operational documentation |
-| `public/` | Static web assets |
-| `src/` | Application source code |
-| `compose.yaml` | Local container orchestration |
-| `Dockerfile` | Container image definition |
-| `package.json` | Node.js project configuration |
-| `README.md` | Project overview and entry point |
+- **Autonomous clusters.** A fleet is composed of independently failing and
+  reconciling clusters, not one WAN-spanning Kubernetes control plane.
+- **Desired state over imperative access.** Git carries versioned global intent;
+  clusters converge locally as connectivity and policy allow.
+- **Evidence before action.** Observe, validate, plan, approve, execute, verify,
+  and audit as distinct lifecycle stages.
+- **Provider independence with honest contracts.** Generic Kubernetes is the
+  baseline. First-class adapters must prove provider-specific capabilities.
+- **Least privilege.** CloudCommand initiates approved workflows through scoped
+  identities rather than silently executing arbitrary privileged commands.
+- **Local autonomy during partitions.** A disconnected site continues from its
+  last accepted intent and reconciles safely on return.
+- **Truthful interfaces.** The terminal, graphical views, alerts, and inspectors
+  should eventually project the same authoritative structured events.
+- **Progressive autonomy.** AI may explain and recommend; deterministic policy
+  and explicit, expiring delegation govern execution.
 
----
+## Near-term roadmap
 
-## Current Status
+The next milestone is one truthful operational loop from bootstrap through
+inspection:
 
-CloudCommand is under active development.
+1. Define the structured event envelope, stable resource identifiers, deep
+   links, persistence boundary, and immutable audit model.
+2. Unify bootstrap and generic Kubernetes registration as one idempotent,
+   restart-safe state machine with explicitly delegated authority.
+3. Connect the console, graphical interface, and resource inspector to the same
+   persisted live event model.
 
-The current phase focuses on:
+After that foundation is coherent, the roadmap expands to disconnect/reconnect
+reconciliation, stateless workload promotion, cluster evacuation for
+maintenance, one narrow stateful promotion contract, and additional provider
+adapters.
 
-- Establishing the provider-independent architecture
-- Defining the Resource Class model
-- Building a reproducible Kubernetes reference provider
-- Developing standardized operational runbooks
-- Creating a functional operator interface
-- Adding health, status, and observability capabilities
-- Demonstrating infrastructure lifecycle management
+See the [project roadmap](docs/roadmap.md) and
+[architecture overview](docs/architecture.md) for the committed baseline. The
+architecture is evolving, so documentation may distinguish current behavior,
+prototypes, accepted design decisions, and future work.
 
-The current repository should be treated as an early working implementation rather than a production-ready release.
+## Reference Kubernetes lab
 
----
+The initial reference environment uses Apple silicon, UTM virtual machines,
+Ubuntu Server, and Kubernetes to provide a quiet, affordable, reproducible
+failure lab.
 
-## Design Principles
+The hardware is not the product. The cluster is not the product. They are test
+environments for proving provider discovery, desired-state reconciliation,
+failure handling, and recovery behavior.
 
-CloudCommand is being developed around the following principles:
+Follow [Create Your Own Kubernetes Cloud Provider on a Base-Model M4 Mac Mini](docs/utm-mac-mini-setup.md)
+for the current lab guide.
 
-### Provider Independence
+## Project status
 
-Application workflows should not be tightly coupled to a particular infrastructure vendor or implementation.
+CloudCommand is under active development. Interfaces and domain models will
+change as the first end-to-end vertical slice is built and verified.
 
-### Capacity Over Hardware
+Contributions should clearly state:
 
-Applications request capabilities and service levels rather than specific machines.
-
-### Reproducibility
-
-Infrastructure and operational procedures should be documented, automated, and repeatable.
-
-### Observable Operations
-
-Operational actions should produce clear status, logs, health information, and measurable outcomes.
-
-### Controlled Change
-
-Infrastructure changes should be performed through defined processes rather than undocumented manual intervention.
-
-### Commodity Infrastructure
-
-The platform should be capable of using affordable, widely available hardware where appropriate.
-
-### Progressive Adoption
-
-CloudCommand should be useful in a small local environment while remaining extensible to larger on-premises and public-cloud deployments.
-
----
-
-## Project Vision
-
-CloudCommand is intended to become a live operations platform capable of managing infrastructure through provider-independent workflows.
-
-An operator should eventually be able to:
-
-- View available capacity
-- Inspect provider health
-- Discover new infrastructure
-- Validate candidate nodes
-- Assign Resource Classes
-- Promote or demote capacity
-- Execute operational runbooks
-- Deploy workloads
-- Monitor services
-- Respond to failures
-- Expand the environment without redesigning the application layer
-
-The same operational concepts should apply whether the underlying provider consists of three local Kubernetes nodes or a managed cloud platform.
-
----
-
-## Contributing
-
-This project is currently in an early development phase.
-
-Documentation, architecture, provider interfaces, and runbook behavior may change as the reference implementation develops.
-
-Issues and pull requests should include:
-
-- A clear description of the proposed change
-- The operational or architectural problem being addressed
-- Testing or validation information
-- Documentation updates when behavior changes
-
----
+- the operational or architectural problem being addressed
+- whether the change affects implemented behavior, a prototype, or future design
+- validation or test evidence
+- documentation changes when behavior changes
 
 ## License
 
-This project is licensed under the terms included in the repository’s [`LICENSE`](LICENSE) file.
+Licensed under the terms in [LICENSE](LICENSE).
