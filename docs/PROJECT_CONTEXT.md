@@ -264,6 +264,11 @@ Lab Philosophy
 
 CloudCommand development favors practical, low-power lab systems rather than noisy rack servers.
 
+The committed reference implementation uses standard upstream Kubernetes
+bootstrapped with kubeadm. It does not use K3s, MicroK8s, minikube, or a managed
+Kubernetes service. The purpose is to preserve the normal Kubernetes component,
+node, upgrade, networking, and failure model in an affordable environment.
+
 The preferred lab model is a fleet of mini PCs that can function as:
 
 * Kubernetes control-plane nodes
@@ -277,7 +282,20 @@ The control-plane node should remain relatively light and act as a truth and coo
 
 Noisy workloads should generally run on worker nodes.
 
+Argo CD, platform add-ons, and application workloads should run on worker nodes
+unless a documented infrastructure-specific reason requires an explicit
+control-plane toleration. Retain the standard control-plane NoSchedule taint.
+
 A lightweight CloudCommand Core or coordinating agent may run on a control-plane node when appropriate.
+
+The first multi-node cluster may run as virtual machines on one base-model Apple
+M4 Mac Mini with 16 GB of memory. This is a valid Kubernetes topology but a
+single physical failure domain. Public documentation must state that limitation
+and distinguish topology testing from physical high availability.
+
+See docs/reference-lab.md and
+docs/decisions/0002-reference-lab-hardware-and-memory.md for the current
+reference-lab baseline and decision record.
 
 Migration Vision
 
