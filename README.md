@@ -1,15 +1,15 @@
 <p align="center">
-  <img src="docs/assets/cloudcommand-mark.svg" alt="CloudCommand mark" width="112">
+  <img src="docs/assets/cloud-command-banner.svg" alt="cloud-command terminal banner" width="800">
 </p>
 
 <h1 align="center">CloudCommand</h1>
 
 <p align="center">
-  <strong>A provider-independent fleet control plane for autonomous Kubernetes clusters.</strong>
+  <strong>A single control plane for your entire Kubernetes fleet.</strong>
 </p>
 
 <p align="center">
-  Public cloud · private cloud · on-premises · edge · home lab
+  Public cloud · private cloud · on-premises · edge · homelab
 </p>
 
 > Kubernetes made a cluster declarative. CloudCommand makes a fleet of
@@ -224,9 +224,11 @@ prototypes, accepted design decisions, and future work.
 
 ## Reference Kubernetes lab
 
-The initial reference environment uses Apple silicon, UTM virtual machines,
-Ubuntu Server, and Kubernetes to provide a quiet, affordable, reproducible
-failure lab.
+The initial reference environment uses a base-model Apple M4 Mac Mini with
+16 GB of memory, UTM virtual machines, Ubuntu Server, and Kubernetes to provide
+a quiet, affordable, reproducible failure lab. The machine was acquired for
+approximately USD 500 through Apple's education store; that is a historical
+acquisition price rather than a claim about current retail pricing.
 
 The hardware is not the product. The cluster is not the product. They are test
 environments for proving provider discovery, desired-state reconciliation,
@@ -234,6 +236,12 @@ failure handling, and recovery behavior.
 
 Follow [Create Your Own Kubernetes Cloud Provider on a Base-Model M4 Mac Mini](docs/utm-mac-mini-setup.md)
 for the current lab guide.
+
+The [reference lab architecture](docs/reference-lab.md) records the committed
+upstream `kubeadm` baseline, workload-placement policy, public bootstrap plan,
+physical-host expansion, and validation criteria. Hardware and memory choices
+are tracked as explicit architecture decisions rather than undocumented buying
+preferences.
 
 ## Project status
 

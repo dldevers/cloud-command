@@ -27,7 +27,7 @@ The Kubernetes provider uses three Ubuntu Server virtual machines:
 
 | Virtual Machine | Role | vCPUs | Memory | Disk |
 |---|---|---:|---:|---:|
-| `k8s-control-1` | Kubernetes control plane | 2 | 4 GB | 20 GB |
+| `k8s-control-1` | Kubernetes control plane | 2 | 2 GB | 20 GB |
 | `k8s-worker-1` | Kubernetes worker | 2 | 4 GB | 20 GB |
 | `k8s-worker-2` | Kubernetes worker | 2 | 4 GB | 20 GB |
 
@@ -36,10 +36,16 @@ The virtual disks are thin-provisioned, so UTM does not immediately consume the 
 The three VMs require a combined maximum allocation of:
 
 - 6 virtual CPU cores
-- 12 GB of memory
+- 10 GB of memory
 - 60 GB of thin-provisioned storage
 
 This configuration is intentionally modest so that the cluster can run on a base-model M4 Mac Mini while leaving resources available for macOS and CloudCommand development.
+
+The 2 GB control-plane allocation follows Kubernetes' published minimum for a
+small `kubeadm` cluster. Keep the standard control-plane `NoSchedule` taint so
+Argo CD and application workloads run on workers. Resize the control-plane VM
+to 3-4 GB if monitoring shows sustained memory pressure, component restarts, or
+OOM events.
 
 ## Prerequisites
 
@@ -51,6 +57,13 @@ Before beginning, you need:
 - A working internet connection
 - Administrative access to the Mac
 - Basic familiarity with Linux commands
+
+Apple's U.S. Education Store provides official education pricing for eligible
+buyers. On 2026-07-16, it listed Mac Mini models from USD 699. Verify current
+configuration, price, eligibility, and any required educational-status check
+directly with Apple:
+
+[Shop Mac through the Apple U.S. Education Store](https://www.apple.com/us-edu/shop/buy-mac)
 
 > Using VMware, Proxmox, Hyper-V, VirtualBox, cloud VMs, or another platform?
 > Start with the [platform-independent virtual-machine prerequisites](virtual-machine-prerequisites.md).
@@ -74,7 +87,8 @@ Download the current Ubuntu Server LTS release for ARM64:
 
 The downloaded installer should be an ARM64 ISO image.
 
-Do not download the AMD64 or x86-64 installer. The M4 Mac Mini uses Apple Silicon, so the virtual machines should run the ARM64 version of Ubuntu.
+Do not download the AMD64 or x86-64 installer. The M4 processor uses the ARM64
+architecture, so the virtual machines should run the ARM64 version of Ubuntu.
 
 ## Create the First Ubuntu Virtual Machine
 
@@ -86,7 +100,8 @@ Open UTM and select:
 2. **Virtualize**
 3. **Linux**
 
-Choose virtualization rather than emulation. Virtualization allows the ARM64 Ubuntu guest to run efficiently on Apple Silicon.
+Choose virtualization rather than emulation. Virtualization allows the ARM64
+Ubuntu guest to run efficiently on the M4 processor.
 
 ## Select the Ubuntu ISO
 
@@ -102,7 +117,8 @@ In most current versions of UTM, selecting the ISO under the boot media or CD/DV
 
 Configure the first VM with the following resources:
 
-- **Memory:** `4096 MiB`
+- **Memory:** `2048 MiB` for the control-plane template; increase worker clones
+  to `4096 MiB`
 - **CPU cores:** `2`
 - **Storage:** `20 GB`
 - **Architecture:** ARM64
@@ -487,15 +503,19 @@ k8s-worker-2
 
 Keep the original template powered off as a reusable recovery image.
 
-Each cloned VM should retain:
+Each cloned VM should use:
 
 - 2 virtual CPU cores
-- 4 GB of memory
+- 2 GB of memory for `k8s-control-1`
+- 4 GB of memory for each worker
 - 20 GB of thin-provisioned storage
 - Shared UTM networking
 - The ARM64 Ubuntu installation
 - Containerd
 - Kubernetes packages
+
+After cloning, open the UTM hardware settings for both worker VMs and increase
+their memory to `4096 MiB` before the first boot.
 
 ## Configure the Control-Plane Node
 
