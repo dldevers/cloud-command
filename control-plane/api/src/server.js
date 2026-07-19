@@ -8,6 +8,8 @@ const cors = require('cors');
 const morgan = require('morgan');
 const k8s = require('@kubernetes/client-node');
 
+const { createEventStore } = require('./event-store');
+
 const app = express();
 const port = Number.parseInt(process.env.PORT || '3000', 10);
 
@@ -15,6 +17,20 @@ const providersFile = path.resolve(
   __dirname,
   '../data/providers.json',
 );
+
+const eventsFile = path.resolve(
+  process.env.CLOUDCOMMAND_EVENTS_FILE ||
+    path.join(__dirname, '../data/events.ndjson'),
+);
+
+const eventStore = createEventStore({
+  filePath: eventsFile,
+});
+
+const eventActor = {
+  type: 'service',
+  id: 'cloudcommand-api',
+};
 
 app.use(helmet());
 app.use(cors());
@@ -165,6 +181,37 @@ app.get('/api/providers', async (req, res) => {
   }
 });
 
+app.get('/api/events', async (req, res) => {
+  try {
+    const events = await eventStore.read({
+      type: req.query.type,
+      operationId: req.query.operationId,
+      resourceId: req.query.resourceId,
+      limit: req.query.limit,
+    });
+
+    return res.json({
+      count: events.length,
+      items: events,
+    });
+  } catch (error) {
+    if (error instanceof TypeError) {
+      return res.status(400).json({
+        status: 'invalid-request',
+        error: error.message,
+      });
+    }
+
+    console.error('Failed to read events:', error);
+
+    return res.status(500).json({
+      status: 'error',
+      error: 'Unable to read structured events',
+      detail: error.message,
+    });
+  }
+});
+
 app.post('/api/providers/test', async (req, res) => {
   try {
     const {
@@ -201,6 +248,9 @@ app.post('/api/providers/test', async (req, res) => {
 });
 
 app.post('/api/providers', async (req, res) => {
+  let operationId;
+  let eventResource;
+
   try {
     const {
       name,
@@ -243,6 +293,28 @@ app.post('/api/providers', async (req, res) => {
       });
     }
 
+    operationId = crypto.randomUUID();
+    eventResource = {
+      kind: 'Provider',
+      id,
+      uid: null,
+    };
+
+    await eventStore.append({
+      type: 'cloudcommand.provider.registration.requested.v1',
+      source: 'cloudcommand.control-plane.api',
+      subject: `provider/${id}`,
+      operationId,
+      actor: eventActor,
+      resource: eventResource,
+      data: {
+        providerType: type,
+        environment,
+        location,
+        connectionMode,
+      },
+    });
+
     const inspection = await inspectKubernetesProvider({
       connectionMode,
     });
@@ -274,16 +346,67 @@ app.post('/api/providers', async (req, res) => {
     providers.push(provider);
     await writeProviders(providers);
 
+    eventResource = {
+      ...eventResource,
+      uid: provider.uid,
+    };
+
+    let eventWarning;
+
+    try {
+      await eventStore.append({
+        type: 'cloudcommand.provider.registration.completed.v1',
+        source: 'cloudcommand.control-plane.api',
+        subject: `provider/${id}`,
+        operationId,
+        actor: eventActor,
+        resource: eventResource,
+        data: {
+          status: provider.status,
+          connectionStatus: provider.connectionStatus,
+          summary: provider.summary,
+        },
+      });
+    } catch (eventError) {
+      eventWarning =
+        'Provider was created, but its completion event was not recorded';
+      console.error(eventWarning, eventError);
+    }
+
     return res.status(201).json({
       status: 'created',
+      operationId,
       provider,
       inspection,
+      ...(eventWarning ? { warnings: [eventWarning] } : {}),
     });
   } catch (error) {
     console.error('Failed to register provider:', error);
 
+    if (operationId && eventResource) {
+      try {
+        await eventStore.append({
+          type: 'cloudcommand.provider.registration.failed.v1',
+          source: 'cloudcommand.control-plane.api',
+          subject: `provider/${eventResource.id}`,
+          operationId,
+          actor: eventActor,
+          resource: eventResource,
+          data: {
+            error: error.message,
+          },
+        });
+      } catch (eventError) {
+        console.error(
+          'Failed to record provider registration failure:',
+          eventError,
+        );
+      }
+    }
+
     return res.status(503).json({
       status: 'unavailable',
+      operationId,
       error: 'Unable to register the resource provider',
       detail: error.message,
     });
