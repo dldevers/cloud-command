@@ -22,11 +22,11 @@ const sharp = require("sharp");
 
 const logoPath = path.join(
   root,
-  "control-plane/prototype/v-01/assets/img/cloudcommand-mark.svg",
+  "control-plane/ui/assets/img/cloudcommand-mark.svg",
 );
 const fontPath = path.join(
   root,
-  "control-plane/prototype/v-01/assets/fonts/jetbrains-mono/JetBrainsMono-SemiBold.woff2",
+  "control-plane/ui/assets/fonts/jetbrains-mono/JetBrainsMono-SemiBold.woff2",
 );
 
 const [logo, font] = await Promise.all([

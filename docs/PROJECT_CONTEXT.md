@@ -144,26 +144,28 @@ Urgent errors and empty-state failures should use a reusable floating alert patt
 
 Acknowledged warnings should not repeatedly interrupt the operator unless their state materially changes.
 
-Prototype Location
+Interface Location
 
-Current prototype directory:
+Current interface directory:
 
-control-plane/prototype/v-01
+control-plane/ui
 
 Current main files include:
 
-control-plane/prototype/v-01/index.html
-control-plane/prototype/v-01/assets/css/v-01.css
-control-plane/prototype/v-01/assets/js/v-01.js
-control-plane/prototype/v-01/assets/img/cloudcommand-mark.svg
+control-plane/ui/index.html
+control-plane/ui/assets/css/cloud-command.css
+control-plane/ui/assets/js/cloud-command.js
+control-plane/ui/assets/img/cloudcommand-mark.svg
 
-The current prototype is a local static interface prototype.
+The current interface is the primary CloudCommand spatial control-plane UI.
+It is static today and uses simulated operational data in some views while the
+persisted control-plane event model is connected incrementally.
 
 The current HTML loads:
 
-<script type="module" src="./assets/js/v-01.js"></script>
+<script type="module" src="./assets/js/cloud-command.js"></script>
 
-Current Prototype State
+Current Interface State
 
 The current interface includes:
 
@@ -410,7 +412,7 @@ check terminal
 
 Editing Workflow
 
-When replacing or creating prototype files:
+When replacing or creating interface files:
 
 1. provide the exact vim <path> command
 2. handle one file uniquely and explicitly
@@ -459,7 +461,7 @@ After that:
 * inspect terminal open, collapse, and close behavior
 * continue reducing unnecessary interface chrome
 * update the icon inventory
-* capture the next stable prototype state
+* capture the next stable interface state
 
 Project Values
 

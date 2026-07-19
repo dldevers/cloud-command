@@ -23,11 +23,11 @@ boundary across unreliable networks.
 The project is an early working implementation and active systems-design
 project. It is not production-ready.
 
-## Interface prototype
+## Control-plane interface
 
-![CloudCommand spatial fleet control plane showing a critical application inspection](docs/assets/screenshots/cloudcommand-star-map-prototype.jpg)
+![CloudCommand spatial fleet control plane showing a critical application inspection](docs/assets/screenshots/cloudcommand-star-map.jpg)
 
-<p align="center"><em>Current spatial control-plane prototype with the payments application in a critical state and its diagnostic inspection open. Displayed operational data is simulated.</em></p>
+<p align="center"><em>Current spatial control-plane interface with the payments application in a critical state and its diagnostic inspection open. Displayed operational data is simulated.</em></p>
 
 ## The problem
 
@@ -101,7 +101,7 @@ and customer-controlled execution.
 | Bootstrap CLI | Python bootstrap, status, doctor, local state initialization, and Kubernetes discovery |
 | Kubernetes adapter | Node.js API for testing, registering, listing, and inspecting a Kubernetes provider through local kubeconfig or in-cluster identity |
 | Provider UI | Browser workflow connected to the API for provider registration, discovery, and inspection |
-| Spatial control plane | Interactive star-map prototype with pan, zoom, focus, status, console, and inspector experiments |
+| Spatial control plane | Interactive star map with pan, zoom, focus, status, console, and resource inspection |
 | Reference environment | Reproducible Kubernetes lab guides and bootstrap scripts for commodity hardware and UTM virtual machines |
 | Architecture | Provider interface, Resource Class, adaptive-control-plane, bootstrap, fleet, and safety design documentation |
 
@@ -122,30 +122,30 @@ control-plane/api
 control-plane/web
   └─ API-connected provider workflow and operational views
 
-control-plane/prototype/v-01
-  └─ current static spatial interface prototype
+control-plane/ui
+  └─ primary spatial control-plane interface
 ```
 
 CloudCommand currently supports one generic Kubernetes provider path. Managed
 cloud lifecycle adapters, fleet reconciliation, service-class enforcement, and
 multi-cluster workload movement have not yet been implemented.
 
-## Run the interface prototype
+## Run the control-plane interface
 
 From the repository root:
 
 ```bash
-python3 control-plane/prototype/server.py
+python3 -m http.server 8080 --directory control-plane/ui
 ```
 
 Then open:
 
 ```text
-http://localhost:8080/v-01/index.html
+http://localhost:8080/
 ```
 
-The prototype server uses a local SQLite database for seeded interface data.
-It is a design environment, not the production control-plane architecture.
+The interface is currently static and uses simulated operational data in some
+views while the persisted control-plane event model is connected incrementally.
 
 ## Run the Kubernetes provider API
 
@@ -174,8 +174,8 @@ current walkthrough.
 ├── cloudcommand.py                 # early bootstrap agent and CLI
 ├── control-plane/
 │   ├── api/                        # Kubernetes provider API
-│   ├── web/                        # API-connected operator interface
-│   └── prototype/                  # spatial UI experiments and v-01
+│   ├── ui/                         # primary spatial control-plane interface
+│   └── web/                        # API-connected provider workflow
 ├── docs/                           # architecture, decisions, and lab guides
 ├── scripts/                        # Kubernetes bootstrap and node setup
 └── README.md
@@ -220,7 +220,7 @@ adapters.
 See the [project roadmap](docs/roadmap.md) and
 [architecture overview](docs/architecture.md) for the committed baseline. The
 architecture is evolving, so documentation may distinguish current behavior,
-prototypes, accepted design decisions, and future work.
+accepted design decisions, experiments, and future work.
 
 ## Reference Kubernetes lab
 
@@ -251,7 +251,7 @@ change as the first end-to-end vertical slice is built and verified.
 Contributions should clearly state:
 
 - the operational or architectural problem being addressed
-- whether the change affects implemented behavior, a prototype, or future design
+- whether the change affects implemented behavior, the interface, or future design
 - validation or test evidence
 - documentation changes when behavior changes
 
